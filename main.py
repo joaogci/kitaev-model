@@ -8,7 +8,7 @@ from hamiltonian import Hamiltonian
 SEED = 2024
 np.random.seed(SEED)
 
-Lx, Ly = 16, 16
+Lx, Ly = 2, 2
 K = [1.0, 1.0, 1.0]
 
 latt = Lattice(Lx, Ly)
@@ -39,7 +39,7 @@ plt.xlabel(r"$i$")
 plt.ylabel(r"$E_i$")
 # plt.show()
 
-"""
+
 # Generate all possible flux configurations
 all_flux_configurations = list(product([1, -1], repeat=latt.Nb))
 
@@ -49,7 +49,7 @@ sum_flux = list()
 for flux in all_flux_configurations:
   ham.set_flux(flux)
   ham.diagonalise()
-  erg = np.round(ham.obs_energy(), 8)
+  erg = np.round(ham.obs_gs_energy(), 8)
   
   if np.sum(flux) not in sum_flux:
     sum_flux.append(np.sum(flux))
@@ -64,7 +64,7 @@ histogram = np.zeros((len(sum_flux), len(energies)))
 for flux in all_flux_configurations:
   ham.set_flux(flux)
   ham.diagonalise()
-  erg = np.round(ham.obs_energy(), 8)
+  erg = np.round(ham.obs_gs_energy(), 8)
   
   idx_erg = energies.index(erg)
   idx_flux = sum_flux.index(np.sum(flux))
@@ -78,4 +78,4 @@ sns.heatmap(histogram, annot=True)
 plt.xlabel(r"$E$")
 plt.ylabel(r"Sum of Flux")
 plt.show() 
-"""  
+

@@ -35,7 +35,7 @@ class Hamiltonian():
         self.U[:, n] = self.U_full[:, i]
         n += 1
 
-  def obs_energy(self):
+  def obs_gs_energy(self):
     return - 0.5 * np.sum(self.E) / self.__latt.N
   
   def obs_spinZ_eq(self, T: float):
