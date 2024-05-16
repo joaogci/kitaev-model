@@ -52,7 +52,7 @@ class Hamiltonian():
     self.set_gs_flux()
     self.diagonalise()
     
-    return - np.sum(self.E) / self.__latt.N
+    return - 0.5 * np.sum(self.E) / self.__latt.N
 
   def ana_ground_state_dispersion(self, q: np.ndarray):
     return self.K[2] + self.K[1] * np.exp(q @ self.__latt.n2 * 1j) + self.K[0] * np.exp(q @ self.__latt.n1 * 1j)
@@ -65,7 +65,7 @@ class Hamiltonian():
     return - res / self.__latt.N
 
   def __set_H(self):
-    self.H_majoranas = 1.0j * np.block([[np.zeros(self.F.shape), self.F], [- self.F.T, np.zeros(self.F.shape)]])
+    self.H_majoranas = 2.0j * np.block([[np.zeros(self.F.shape), self.F], [- self.F.T, np.zeros(self.F.shape)]])
     
     h = self.F + self.F.T
     d = self.F.T - self.F
