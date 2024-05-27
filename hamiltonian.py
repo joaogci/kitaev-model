@@ -37,9 +37,18 @@ class Hamiltonian():
     self.T = np.block([[self.X.conj(), self.Y.conj()], [self.Y, self.X]])
     
   def obs_gs_energy(self):
+    """
+      Ground state energy for a given flux ocnfiguration
+    """
+    
     return - 0.5 * np.sum(self.E) / self.__latt.N
   
-  def obs_gs_spinZ_eq(self, T: float):
+  def obs_spinZ_eq(self, T: float):
+    """
+      Equal time spin-spin correlations 
+      S_{ij}^{zz} = \langle \sigma^z_{iA} \sigma^z_{jB} \rangle
+    """
+    
     i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
     j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
     Bij = self.F[i, j]
@@ -55,22 +64,6 @@ class Hamiltonian():
   
   def obs_gs_dimer_eq(self):
     ...
-
-  def ground_state_energy(self):
-    self.set_gs_flux()
-    self.diagonalise()
-    
-    return - 0.5 * np.sum(self.E) / self.__latt.N
-
-  def ana_ground_state_dispersion(self, q: np.ndarray):
-    return self.K[2] + self.K[1] * np.exp(q @ self.__latt.n2 * 1j) + self.K[0] * np.exp(q @ self.__latt.n1 * 1j)
-  
-  def ana_gound_state_energy(self):
-    res = 0.0
-    for n in range(self.__latt.N):
-      res += np.abs(self.ana_ground_state_dispersion(self.__latt.k_unit_cell[n, :]))
-      
-    return - res / self.__latt.N
 
   def __set_H(self):
     self.H_majoranas = 2.0j * np.block([[np.zeros(self.F.shape), self.F], [- self.F.T, np.zeros(self.F.shape)]])

@@ -13,20 +13,14 @@ K = [1.0, 1.0, 1.0]
 
 latt = Lattice(Lx, Ly)
 ham = Hamiltonian(K, latt)
-
-E_gs = ham.ground_state_energy()
-print(f"Ground state energy from numerical diagonalisation: \t {E_gs}")
-
-E_gs_ana = ham.ana_gound_state_energy()
-print(f"Ground state energy from analytical calculation: \t {E_gs_ana}")
-
 ham.set_gs_flux()
 ham.diagonalise()
 
-print(f"S_ij(T = 0) = {ham.obs_gs_spinZ_eq(0.0)}")
-print(f"S_ij(T = 0.01) = {ham.obs_gs_spinZ_eq(0.01)}")
-print(f"S_ij(T = 0.1) = {ham.obs_gs_spinZ_eq(0.1)}")
-print(f"S_ij(T = 1.0) = {ham.obs_gs_spinZ_eq(1.0)}")
+print(f"E_gs = {ham.obs_gs_energy()}")
+print(f"S_ij(T = 0) = {ham.obs_spinZ_eq(0.0)}")
+print(f"S_ij(T = 0.01) = {ham.obs_spinZ_eq(0.01)}")
+print(f"S_ij(T = 0.1) = {ham.obs_spinZ_eq(0.1)}")
+print(f"S_ij(T = 1.0) = {ham.obs_spinZ_eq(1.0)}")
 
 plt.figure(1)
 plt.title("Eigenvalues for ground state energy")
