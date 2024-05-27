@@ -24,29 +24,34 @@ class Hamiltonian():
     self.__set_H()
   
   def diagonalise(self):
-    self.E_full, self.U_full = np.linalg.eigh(self.H_majoranas)
+    self.E_full, self.U = np.linalg.eigh(self.H_matter)
+  
+    self.E = self.E_full[self.__latt.N:]
     
-    self.E = np.zeros(self.__latt.N)
-    self.U = np.zeros((self.__latt.Ns, self.__latt.N), dtype=complex)
-    n = 0
-    for i in range(self.__latt.Ns):
-      if self.E_full[i] > 0.0:
-        self.E[n] = self.E_full[i]
-        self.U[:, n] = self.U_full[:, i]
-        n += 1
-
+    V = self.U[:, self.__latt.N:]
+    self.X = V[:self.__latt.N, :]
+    self.Y = V[self.__latt.N:, :]
+    self.X = self.X.T
+    self.Y = self.Y.T
+    
+    self.T = np.block([[self.X.conj(), self.Y.conj()], [self.Y, self.X]])
+    
   def obs_gs_energy(self):
     return - 0.5 * np.sum(self.E) / self.__latt.N
   
-  def obs_spinZ_eq(self, T: float):
-    i = self.__latt.bond_list[0, 0]
-    j = self.__latt.bond_list[0, 1]
+  def obs_gs_spinZ_eq(self):
+    i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
+    j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
+    Bij = self.F[i, j]
+    
+    A = self.X.T + self.Y.T
+    B = self.X.T - self.Y.T
     
     res = 0.0
-    for m in range(self.__latt.N):
-      res += np.conj(self.U[i, m]) * self.U[j, m] * self.F[self.__latt.unit_cell[i], self.__latt.unit_cell[j]] * (2.0 * self.__fermi_function(m, T) - 1.0)
-  
-    return - 1.0j * res
+    for m in range(len(self.E)):
+      res += Bij * A[i, m] * B[j, m]
+
+    return res
 
   def ground_state_energy(self):
     self.set_gs_flux()
@@ -69,7 +74,7 @@ class Hamiltonian():
     
     h = self.F + self.F.T
     d = self.F.T - self.F
-    self.H_matter = np.block([[h, d], [np.conj(d), - h.T]])
+    self.H_matter = np.block([[h, d], [d.conj().T, - h.T]])
 
   def __fermi_function(self, m: int, T: float):
     beta = self.__T_to_beta(T)
