@@ -8,7 +8,7 @@ from hamiltonian import Hamiltonian
 SEED = 2024
 np.random.seed(SEED)
 
-Lx, Ly = 16, 16
+Lx, Ly = 32, 32
 K = [1.0, 1.0, 1.0]
 
 latt = Lattice(Lx, Ly)
@@ -23,7 +23,10 @@ print(f"Ground state energy from analytical calculation: \t {E_gs_ana}")
 ham.set_gs_flux()
 ham.diagonalise()
 
-print(f"S_ij = {ham.obs_gs_spinZ_eq()}")
+print(f"S_ij(T = 0) = {ham.obs_gs_spinZ_eq(0.0)}")
+print(f"S_ij(T = 0.01) = {ham.obs_gs_spinZ_eq(0.01)}")
+print(f"S_ij(T = 0.1) = {ham.obs_gs_spinZ_eq(0.1)}")
+print(f"S_ij(T = 1.0) = {ham.obs_gs_spinZ_eq(1.0)}")
 
 plt.figure(1)
 plt.title("Eigenvalues for ground state energy")

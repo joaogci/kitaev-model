@@ -39,7 +39,7 @@ class Hamiltonian():
   def obs_gs_energy(self):
     return - 0.5 * np.sum(self.E) / self.__latt.N
   
-  def obs_gs_spinZ_eq(self):
+  def obs_gs_spinZ_eq(self, T: float):
     i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
     j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
     Bij = self.F[i, j]
@@ -49,9 +49,12 @@ class Hamiltonian():
     
     res = 0.0
     for m in range(len(self.E)):
-      res += Bij * A[i, m] * B[j, m]
+      res += Bij * A[i, m] * B[j, m] * (1.0 - 2.0 * self.__fermi_function(m, T))
 
     return res
+  
+  def obs_gs_dimer_eq(self):
+    ...
 
   def ground_state_energy(self):
     self.set_gs_flux()
@@ -79,7 +82,7 @@ class Hamiltonian():
   def __fermi_function(self, m: int, T: float):
     beta = self.__T_to_beta(T)
     if T == 0.0:
-      return 1.0
+      return 0.0
     return 1.0 / (np.exp(beta * self.E[m]) + 1.0)
 
   def __T_to_beta(self, T: float):
