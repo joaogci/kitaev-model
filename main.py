@@ -5,6 +5,7 @@ import os
 from src.monte_carlo import MonteCarlo
 from src.lattice import Lattice
 from src.flux import Flux
+from src.analysis import Analysis
 
 import scienceplots
 plt.style.use("science")
@@ -16,8 +17,9 @@ Lx, Ly = 4, 4
 K = [1.0, 1.0, 1.0]
 beta = 1.0
 
-n_sweeps = 1000
+n_sweeps = 100
 n_bins = 10
+n_rebin = 1
 
 n_sims = 1
 
@@ -34,7 +36,11 @@ for i in range(n_sims):
     os.mkdir(sim_name)
   os.chdir(sim_name)
   
-  print(f"Starting -> {sim_name}")  
-  mc.simulation()
+  print(f"Starting: {sim_name}")  
+  #mc.simulation()
+  print(f"Analysing: {sim_name} ")
+
+  ana = Analysis(n_rebin)
+  ana.analyse()
 
   os.chdir("../")

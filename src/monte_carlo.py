@@ -4,12 +4,14 @@ from .lattice import Lattice
 from .sampling import Sampling
 import os
 from tqdm import tqdm
+import time
 
 class MonteCarlo():
   def __init__(self, n_sweeps: int, n_bins: int, beta: float):
     self.n_sweeps = n_sweeps
     self.n_bins = n_bins
     self.beta = beta
+    self.wall_time = 0.0
 
   def set_flux(self, flux: Flux):
     self.__flux = flux
@@ -26,6 +28,8 @@ class MonteCarlo():
       self.__flux.set_flux(flux)
     self.__flux.diagonalise_flux()
     
+    start = time.time()
+     
     for b in tqdm(range(self.n_bins)):
       self.__sampling_obs.reset()
       
@@ -39,6 +43,7 @@ class MonteCarlo():
       self.__sampling_obs.write_to_file()
       self.__write_configuration()
     
+    self.wall_time = time.time() - start
     self.__write_info()
   
   def __mc_step(self, b: int):
@@ -63,7 +68,14 @@ class MonteCarlo():
     return np.exp(flux_new.ln_weight(self.beta) - self.__flux.ln_weight(self.beta))
  
   def __write_info(self):
-    ...
+    with open("info", "a") as f:
+      f.write("Simulation Finished \n")
+      f.write(f"Lx, Ly: {self.__latt.Lx}, {self.__latt.Ly} \n")
+      f.write(f"Kx, Ky, Kz: {self.__flux.K[0]}, {self.__flux.K[1]}, {self.__flux.K[2]} \n")
+      f.write(f"beta: {self.beta} \n")
+      f.write(f"n_bins, mc_sweeps: {self.n_bins}, {self.n_sweeps} \n")
+      f.write(f"Time: {self.wall_time}s \n")
+      f.write("----------------------- \n")
   
   def __write_configuration(self):
     np.savetxt("confout", self.__flux.flux)
