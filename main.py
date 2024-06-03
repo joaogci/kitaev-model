@@ -5,7 +5,6 @@ import os
 from src.monte_carlo import MonteCarlo
 from src.lattice import Lattice
 from src.flux import Flux
-from src.sampling import Sampling
 
 import scienceplots
 plt.style.use("science")
@@ -17,12 +16,12 @@ Lx, Ly = 4, 4
 K = [1.0, 1.0, 1.0]
 beta = 1.0
 
-n_sweeps = 1_00
+n_sweeps = 1000
 n_bins = 10
 
-n_sim = 1
+n_sims = 1
 
-for i in range(n_sim): 
+for i in range(n_sims): 
   latt = Lattice(Lx, Ly)
   flux = Flux(K, latt)
 
