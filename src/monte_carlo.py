@@ -26,7 +26,6 @@ class MonteCarlo():
       self.__flux.set_flux(flux)
     self.__flux.diagonalise_flux()
     
-    
     for b in tqdm(range(self.n_bins)):
       self.__sampling_obs.reset()
       

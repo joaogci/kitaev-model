@@ -1,28 +1,41 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import product
+import os
 
 from src.monte_carlo import MonteCarlo
 from src.lattice import Lattice
 from src.flux import Flux
 from src.sampling import Sampling
 
+import scienceplots
+plt.style.use("science")
+
 SEED = 2024
 np.random.seed(SEED)
 
 Lx, Ly = 4, 4
-K = [0.5, 0.5, 0.5]
+K = [1.0, 1.0, 1.0]
 beta = 1.0
 
 n_sweeps = 1_00
 n_bins = 10
 
-latt = Lattice(Lx, Ly)
-flux = Flux(K, latt)
+n_sim = 1
 
-mc = MonteCarlo(n_sweeps, n_bins, beta)
-mc.init_observables(1, 0, latt)
-mc.set_flux(flux)
+for i in range(n_sim): 
+  latt = Lattice(Lx, Ly)
+  flux = Flux(K, latt)
 
-mc.simulation()
+  mc = MonteCarlo(n_sweeps, n_bins, beta)
+  mc.init_observables(1, 0, latt)
+  mc.set_flux(flux)
 
+  sim_name = f"Lx{Lx}_Ly{Ly}_Kx{K[0]}_Ky{K[1]}_Kz{K[2]}_beta{int(beta)}"
+  if not os.path.exists(sim_name):
+    os.mkdir(sim_name)
+  os.chdir(sim_name)
+  
+  print(f"Starting -> {sim_name}")  
+  mc.simulation()
+
+  os.chdir("../")

@@ -16,12 +16,13 @@ class Flux():
   def set_flux(self, flux: list[int]):
     self.flux = flux
     
-    self.__F = np.zeros((self.__latt.N, self.__latt.N), dtype=int)
+    self.__F = np.zeros((self.__latt.N, self.__latt.N))
     for nb in range(self.__latt.Nb):
       i = self.__latt.unit_cell[self.__latt.bond_list[nb, 0]]
       j = self.__latt.unit_cell[self.__latt.bond_list[nb, 1]]
-      self.__F[i, j] = flux[nb]
-      
+
+      self.__F[i, j] = self.K[self.__latt.bond_type[nb] - 1] * flux[nb]
+    
     self.__set_H()
   
   def diagonalise_flux(self):
