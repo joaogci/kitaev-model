@@ -20,16 +20,18 @@ class Analysis():
   
   def __analyse_scal(self, filename: str):
     raw_data = np.loadtxt(filename)
-    
-    data = np.zeros(raw_data.shape[0] // self.n_rebin, dtype=complex)
-    for i in range(data.shape[0]):
-      for j in range(self.n_rebin):
-        data[i] += complex(raw_data[i * self.n_rebin + j, 0], raw_data[i * self.n_rebin + j, 1])
-      data[i] = data[i] / self.n_rebin
+    if raw_data.shape[0] != 1:
+      data = np.zeros(raw_data.shape[0] // self.n_rebin, dtype=complex)
+      for i in range(data.shape[0]):
+        for j in range(self.n_rebin):
+          data[i] += complex(raw_data[i * self.n_rebin + j, 0], raw_data[i * self.n_rebin + j, 1])
+        data[i] = data[i] / self.n_rebin  
+    else :
+      data = complex(raw_data[0], raw_data[1])
     
     mean = np.mean(data)
     std = np.std(data)
-    
+
     with open(filename + "J", "w") as f:
       f.write(f"{mean.real} {std.real} {mean.imag} {std.imag} \n")
     
