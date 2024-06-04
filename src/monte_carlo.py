@@ -25,10 +25,6 @@ class MonteCarlo():
       self.__read_configuration()
     else:
       flux = np.ones(self.__latt.Nb)
-      for i in range(self.__latt.Nb):
-        if np.random.rand() <= 0.5:
-          flux[i] = -1
-
       self.__flux.set_flux(flux)
     self.__flux.diagonalise_flux()
     
