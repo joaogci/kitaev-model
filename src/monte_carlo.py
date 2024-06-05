@@ -36,7 +36,7 @@ class MonteCarlo():
       self.__sampling_obs.reset()
       
       for t in range(self.n_sweeps):
-        for i in range(self.__latt.Nb):
+        for i in range(self.__latt.N):
           b_ = np.random.randint(self.__latt.Nb)
           self.__mc_step(b_)
           
@@ -80,7 +80,7 @@ class MonteCarlo():
       f.write(f"Kx, Ky, Kz: {self.__flux.K[0]}, {self.__flux.K[1]}, {self.__flux.K[2]} \n")
       f.write(f"beta: {self.beta} \n")
       f.write(f"n_bins, mc_sweeps: {self.n_bins}, {self.n_sweeps} \n")
-      f.write(f"Accepted ration: {self.accepted/(self.n_bins * self.n_sweeps * self.__latt.Nb)} \n")
+      f.write(f"Accepted ration: {self.accepted/(self.n_bins * self.n_sweeps * self.__latt.N)} \n")
       f.write(f"Time: {self.wall_time}s \n")
       f.write("----------------------- \n")
   

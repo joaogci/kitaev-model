@@ -15,6 +15,10 @@ class Sampling():
         case 0:
           self.obs_scal.append(ObsScalar("Sz_0A0B"))
         case 1:
+          self.obs_scal.append(ObsScalar("Sz"))
+        case 2:
+          self.obs_scal.append(ObsScalar("W"))
+        case 3:
           ...
         case _:
           print("Observable not found. ")
@@ -39,13 +43,33 @@ class Sampling():
     i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
     j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
     Fij = flux.flux[0]
-        
     res = complex(0.0)
     for m in range(self.__latt.N):
       res += Fij * A[i, m] * B[j, m] * (1.0 - 2.0 * flux.fermi_function(m, beta))
     
     self.obs_scal[0].obs_vec += res
-  
+    
+    res = complex(0.0)
+    for b in self.__latt.z_bonds:
+      i = self.__latt.unit_cell[self.__latt.bond_list[b, 0]]
+      j = self.__latt.unit_cell[self.__latt.bond_list[b, 1]]
+      Fij = flux.flux[b]
+      for m in range(self.__latt.N):
+        res += Fij * A[i, m] * B[j, m] * (1.0 - 2.0 * flux.fermi_function(m, beta))
+    res = res / self.__latt.N
+
+    self.obs_scal[1].obs_vec += res
+    
+    res = complex(0.0)
+    for p in range(self.__latt.Np):
+      tmp = complex(1.0)
+      for b in range(self.__latt.size_p):
+        tmp *= flux.flux[self.__latt.plaquettes_bonds[p, b]]
+      res += tmp
+    res = np.abs(res) / self.__latt.N
+    
+    self.obs_scal[2].obs_vec += res
+    
   def sample_exact(self, flux: Flux, beta: float):
     for i in range(self.n_scal):
       self.obs_scal[i].N += np.exp(flux.ln_weight(beta))
@@ -56,13 +80,33 @@ class Sampling():
     i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
     j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
     Fij = flux.flux[0]
-        
     res = complex(0.0)
     for m in range(self.__latt.N):
       res += Fij * A[i, m] * B[j, m] * (1.0 - 2.0 * flux.fermi_function(m, beta))
     
     self.obs_scal[0].obs_vec += np.exp(flux.ln_weight(beta)) * res
-  
+    
+    res = complex(0.0)
+    for b in self.__latt.z_bonds:
+      i = self.__latt.unit_cell[self.__latt.bond_list[b, 0]]
+      j = self.__latt.unit_cell[self.__latt.bond_list[b, 1]]
+      Fij = flux.flux[b]
+      for m in range(self.__latt.N):
+        res += Fij * A[i, m] * B[j, m] * (1.0 - 2.0 * flux.fermi_function(m, beta))
+    res = res / self.__latt.N
+
+    self.obs_scal[1].obs_vec += np.exp(flux.ln_weight(beta)) * res
+    
+    res = complex(0.0)
+    for p in range(self.__latt.Np):
+      tmp = complex(1.0)
+      for b in range(self.__latt.size_p):
+        tmp *= flux.flux[self.__latt.plaquettes_bonds[p, b]]
+      res += tmp
+    res = np.abs(res) / self.__latt.N
+    
+    self.obs_scal[2].obs_vec += np.exp(flux.ln_weight(beta)) * res
+
   def write_to_file(self):
     for i in range(self.n_scal):
       self.obs_scal[i].write_to_file()
@@ -71,18 +115,3 @@ class Sampling():
     for i in range(self.n_scal):
       self.obs_scal[i].reset()
 
-
-
-  # def obs_spinZ_eq(self, T: float):
-  #     Equal time spin-spin correlations 
-  #     S_{ij}^{zz} = \langle \sigma^z_{iA} \sigma^z_{jB} \rangle
-    
-  #   i = self.__latt.unit_cell[self.__latt.bond_list[0, 0]]
-  #   j = self.__latt.unit_cell[self.__latt.bond_list[0, 1]]
-  #   Bij = self.F[i, j]
-        
-  #   res = 0.0
-  #   for m in range(len(self.E)):
-  #     res += Bij * self.A[i, m] * self.B[j, m] * (1.0 - 2.0 * self.__fermi_function(m, T))
-
-  #   return res

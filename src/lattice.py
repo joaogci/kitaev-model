@@ -117,3 +117,59 @@ class Lattice():
 
     self.q_points = np.array(self.q_points)
 
+    # Plaquettes 
+    self.Np = self.N
+    self.size_p = 6
+    self.plaquettes_sites = np.zeros((self.Np, self.size_p), dtype=int)
+    self.plaquettes_bonds = np.zeros((self.Np, self.size_p), dtype=int)
+    
+    self.z_bonds = list()
+    self.y_bonds = list()
+    self.x_bonds = list()
+    p = 0
+    for b in range(self.Nb):
+      if self.bond_type[b] == 3:
+        self.z_bonds.append(b)
+      if self.bond_type[b] == 2:
+        self.y_bonds.append(b)
+      if self.bond_type[b] == 1:
+        self.x_bonds.append(b)
+    self.x_bonds = np.array(self.x_bonds)
+    self.y_bonds = np.array(self.y_bonds)
+    self.z_bonds = np.array(self.z_bonds)
+    
+    for p in range(self.Np):
+      self.plaquettes_sites[p, 0] = self.bond_list[self.z_bonds[p], 0]
+      self.plaquettes_sites[p, 1] = self.bond_list[self.z_bonds[p], 1]
+      self.plaquettes_bonds[p, 0] = self.z_bonds[p]
+      
+      for i in range(self.x_bonds.shape[0]):
+        if self.bond_list[self.x_bonds[i], 1] == self.plaquettes_sites[p, 1]:
+          self.plaquettes_sites[p, 2] = self.bond_list[self.x_bonds[i], 0]
+          self.plaquettes_bonds[p, 1] = self.x_bonds[i]
+          break
+
+      for i in range(self.y_bonds.shape[0]):
+        if self.bond_list[self.y_bonds[i], 0] == self.plaquettes_sites[p, 2]:
+          self.plaquettes_sites[p, 3] = self.bond_list[self.y_bonds[i], 1]
+          self.plaquettes_bonds[p, 2] = self.y_bonds[i]
+          break
+        
+      for i in range(self.z_bonds.shape[0]):
+        if self.bond_list[self.z_bonds[i], 1] == self.plaquettes_sites[p, 3]:
+          self.plaquettes_sites[p, 4] = self.bond_list[self.z_bonds[i], 0]
+          self.plaquettes_bonds[p, 3] = self.z_bonds[i]
+          break
+        
+      for i in range(self.x_bonds.shape[0]):
+        if self.bond_list[self.x_bonds[i], 0] == self.plaquettes_sites[p, 4]:
+          self.plaquettes_sites[p, 5] = self.bond_list[self.x_bonds[i], 1]
+          self.plaquettes_bonds[p, 4] = self.x_bonds[i]
+          break
+        
+      for i in range(self.y_bonds.shape[0]):
+        if self.bond_list[self.y_bonds[i], 1] == self.plaquettes_sites[p, 5]:
+          self.plaquettes_bonds[p, 5] = self.y_bonds[i]
+          break
+    
+

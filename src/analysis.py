@@ -21,9 +21,9 @@ class Analysis():
   
   def __analyse_scal(self, filename: str):
     raw_data = np.loadtxt(filename)
-    raw_data = raw_data[self.n_skip:, :]
     
     if len(raw_data.shape) > 1:
+      raw_data = raw_data[self.n_skip:, :]
       data = np.zeros(raw_data.shape[0] // self.n_rebin, dtype=complex)
       for i in range(data.shape[0]):
         for j in range(self.n_rebin):

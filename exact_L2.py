@@ -26,7 +26,7 @@ n_sims = len(T_vals)
 for i in range(n_sims): 
   latt = Lattice(Lx, Ly)
   flux = Flux(K, latt)
-  sampling_obs = Sampling(1, 0, latt)
+  sampling_obs = Sampling(3, 0, latt)
   
   all_flux_configurations = product([-1.0, 1.0], repeat=latt.Nb)
 
