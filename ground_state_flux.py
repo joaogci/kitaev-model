@@ -28,9 +28,9 @@ for i in range(n_sims):
   flux = Flux(K, latt)
   sampling_obs = Sampling(1, 0, latt)
   
-  all_flux_configurations = product([-1.0, 1.0], repeat=latt.Nb)
+  # all_flux_configurations = product([-1.0, 1.0], repeat=latt.Nb)
 
-  sim_name = f"Lx{Lx}_Ly{Ly}_Kx{K[0]:.1f}_Ky{K[1]:.1f}_Kz{K[2]:.1f}_logT{np.log10(T_vals[i]):.3f}_exact"
+  sim_name = f"Lx{Lx}_Ly{Ly}_Kx{K[0]:.1f}_Ky{K[1]:.1f}_Kz{K[2]:.1f}_logT{np.log10(T_vals[i]):.3f}_gs_flux"
   if not os.path.exists(sim_name):
     os.mkdir(sim_name)
   os.chdir(sim_name)
@@ -38,12 +38,13 @@ for i in range(n_sims):
   print(f"Starting: {sim_name}")  
   
   sampling_obs.reset()
-  for flux_conf in all_flux_configurations:
-    flux.set_flux(flux_conf)
-    flux.diagonalise_flux()
-    
-    sampling_obs.sample_exact(flux, beta_vals[i])
+#  for flux_conf in all_flux_configurations:
+  flux_conf = np.ones(latt.Nb)
+  flux.set_flux(flux_conf)
+  flux.diagonalise_flux()
 
+  sampling_obs.sample_exact(flux, beta_vals[i])
+  
   sampling_obs.write_to_file()
 
   print(f"Analysing: {sim_name} ")
