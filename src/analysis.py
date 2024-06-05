@@ -3,8 +3,9 @@ import os
 import sys
 
 class Analysis():
-  def __init__(self, n_rebin: int):
+  def __init__(self, n_rebin: int, n_skip: int):
     self.n_rebin = n_rebin
+    self.n_skip = n_skip
     
   def analyse(self):
     files = os.listdir(".")
@@ -16,10 +17,11 @@ class Analysis():
           self.__analyse_scal(file[:-5])
         
         if file.find("eq") != -1: 
-          self.__analyse_eq(file[:-5])
+          self.__analyse_eq(file[:-3])
   
   def __analyse_scal(self, filename: str):
     raw_data = np.loadtxt(filename)
+    raw_data = raw_data[self.n_skip:, :]
     
     if len(raw_data.shape) > 1:
       data = np.zeros(raw_data.shape[0] // self.n_rebin, dtype=complex)

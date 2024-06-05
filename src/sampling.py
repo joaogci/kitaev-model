@@ -48,7 +48,7 @@ class Sampling():
   
   def sample_exact(self, flux: Flux, beta: float):
     for i in range(self.n_scal):
-      self.obs_scal[i].N += flux.weight(beta)
+      self.obs_scal[i].N += np.exp(flux.ln_weight(beta))
     
     A = flux.X.T + flux.Y.T
     B = flux.X.T - flux.Y.T
@@ -61,7 +61,7 @@ class Sampling():
     for m in range(self.__latt.N):
       res += Fij * A[i, m] * B[j, m] * (1.0 - 2.0 * flux.fermi_function(m, beta))
     
-    self.obs_scal[0].obs_vec += flux.weight(beta) * res
+    self.obs_scal[0].obs_vec += np.exp(flux.ln_weight(beta)) * res
   
   def write_to_file(self):
     for i in range(self.n_scal):

@@ -21,6 +21,8 @@ class MonteCarlo():
     self.__latt = latt
   
   def simulation(self):
+    self.accepted = 0
+
     if os.path.exists("confout"):
       self.__read_configuration()
     else:
@@ -34,7 +36,7 @@ class MonteCarlo():
       self.__sampling_obs.reset()
       
       for t in range(self.n_sweeps):
-        for i in range(self.__latt.N):
+        for i in range(self.__latt.Nb):
           b_ = np.random.randint(self.__latt.Nb)
           self.__mc_step(b_)
           
@@ -45,7 +47,7 @@ class MonteCarlo():
     
     self.wall_time = time.time() - start
     self.__write_info()
-  
+ 
   def __mc_step(self, b: int):
     flux_new = Flux(self.__flux.K, self.__latt)
     flux = self.__flux.flux
@@ -56,15 +58,19 @@ class MonteCarlo():
     flux_new.set_flux(new_flux)
     flux_new.diagonalise_flux()
     
-    if np.random.rand() <= self.__ratio(flux_new):
+    ratio = self.__ratio(flux_new)
+    
+    if np.random.rand() <= ratio:
       self.__flux.set_flux(new_flux)
       self.__flux.X = flux_new.X.copy()
       self.__flux.Y = flux_new.Y.copy()
       self.__flux.T = flux_new.T.copy()
       self.__flux.E = flux_new.E.copy()
+      self.accepted += 1
   
   def __ratio(self, flux_new: Flux):
     # return flux_new.weight(self.beta) / self.__flux.weight(self.beta)
+    # print("new: ", flux_new.ln_weight(self.beta), "old: ", self.__flux.ln_weight(self.beta), "diff: ", flux_new.ln_weight(self.beta) - self.__flux.ln_weight(self.beta))
     return np.exp(flux_new.ln_weight(self.beta) - self.__flux.ln_weight(self.beta))
  
   def __write_info(self):
@@ -74,6 +80,7 @@ class MonteCarlo():
       f.write(f"Kx, Ky, Kz: {self.__flux.K[0]}, {self.__flux.K[1]}, {self.__flux.K[2]} \n")
       f.write(f"beta: {self.beta} \n")
       f.write(f"n_bins, mc_sweeps: {self.n_bins}, {self.n_sweeps} \n")
+      f.write(f"Accepted ration: {self.accepted/(self.n_bins * self.n_sweeps * self.__latt.Nb)} \n")
       f.write(f"Time: {self.wall_time}s \n")
       f.write("----------------------- \n")
   

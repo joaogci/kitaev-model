@@ -18,7 +18,10 @@ class ObsScalar(Obs):
     self.obs_vec = complex(0.0)
      
   def write_to_file(self):
-    self.obs_vec = self.obs_vec / self.N
+    if self.obs_vec == complex(0.0, 0.0):
+      self.obs_vec = complex(np.nan, np.nan)
+    else:
+      self.obs_vec = self.obs_vec / self.N
     
     with open(self.name + "_scal", "a") as f:
       f.write(f"{self.obs_vec.real} {self.obs_vec.imag}\n")

@@ -42,11 +42,20 @@ class Flux():
   def ln_weight(self, beta: float):
     """
       Returns ln(W(F)) = sum_n ln(2) + ln(cosh(beta E_n / 2))
+                       = sum_n ln(exp(beta E_n) + 1) - beta E_n / 2
+      For small T, i.e., beta > 100 approximate: 
+            ln(exp(beta E_n) + 1) -> ln(exp(beta E_n)) = beta E_n
     """
-    return np.sum(np.log(2.0) + np.log(np.cosh(0.5 * beta * self.E)))
+    if beta <= 100.0:
+      return np.sum(np.log(np.exp(beta * self.E) + 1.0) - 0.5 * beta * self.E)
+    else: 
+      return np.sum(0.5 * beta * self.E)
 
   def fermi_function(self, m: int, beta: float):
-    return 1.0 / (np.exp(beta * self.E[m]) + 1.0)
+    if beta * self.E[m] <= 100.0:
+      return 1.0 / (np.exp(beta * self.E[m]) + 1.0)
+    else:
+      return 0.0
   
   def __set_H(self):
     #self.H_majoranas = 2.0j * np.block([[np.zeros(self.F.shape), self.F], [- self.F.T, np.zeros(self.F.shape)]])
