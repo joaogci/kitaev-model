@@ -1,7 +1,7 @@
 import numpy as np
-from .flux import Flux
-from .lattice import Lattice
-from .sampling import Sampling
+from flux import Flux
+from lattice import Lattice
+from sampling import Sampling
 import os
 from tqdm import tqdm
 import time

@@ -1,0 +1,21 @@
+&Lattice
+Lx            = 2   ! Number of unit lattices on the x direction
+Ly            = 2   ! Number of unit lattices on the x direction
+/
+
+&Simulation
+beta          = 10       ! Inverse temperature
+n_bins        = 10        ! Number of bins 
+mc_sweeps     = 1000     ! Number of measurement cycles per bin
+/
+
+&Hamiltonian
+Kx            = 0.33333
+Ky            = 0.33333
+Kz            = 0.33333
+/
+
+&Analysis
+n_skip        = 5   ! Skip first n_skip bins
+n_rebin       = 1    ! Takes the average of n_rebin bins
+/

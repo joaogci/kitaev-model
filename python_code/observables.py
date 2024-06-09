@@ -1,5 +1,5 @@
 import numpy as np
-from .lattice import Lattice
+from lattice import Lattice
 
 class Obs():
   def __init__(self, name: str):

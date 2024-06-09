@@ -1,7 +1,7 @@
 import numpy as np
-from .observables import Obs, ObsScalar, ObsLatt
-from .flux import Flux
-from .lattice import Lattice
+from observables import Obs, ObsScalar, ObsLatt
+from flux import Flux
+from lattice import Lattice
 
 class Sampling():
   def __init__(self, n_scal: int, n_eq: int, latt: Lattice):

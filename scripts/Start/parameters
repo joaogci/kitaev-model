@@ -1,0 +1,21 @@
+&Lattice
+Lx            = Lx_R   ! Number of unit lattices on the x direction
+Ly            = Ly_R   ! Number of unit lattices on the x direction
+/
+
+&Simulation
+beta          = Beta_R       ! Inverse temperature
+n_bins        = NB_R        ! Number of bins 
+mc_sweeps     = NSW_R     ! Number of measurement cycles per bin
+/
+
+&Hamiltonian
+Kx            = Kx_R
+Ky            = Ky_R
+Kz            = Kz_R
+/
+
+&Analysis
+n_skip        = 10   ! Skip first n_skip bins
+n_rebin       = 1    ! Takes the average of n_rebin bins
+/
