@@ -189,11 +189,7 @@ int main(int argc, char **argv)
             #pragma omp master 
             {
               for (n_ex = 0; n_ex < n_exchange_steps; n_ex++) {
-                i_ex = pcg32_random_r(&rng) % n_replica_walkers;
-                while (i_ex == n_replica_walkers - 1) {
-                  i_ex = pcg32_random_r(&rng) % n_replica_walkers;
-                }
-
+                i_ex = pcg32_random_r(&rng) % (n_replica_walkers - 1);
                 exchange(pcg32_double_r(&rng), &(replicas[i_ex]), &(replicas[i_ex + 1]));
               }
             }
