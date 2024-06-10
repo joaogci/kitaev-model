@@ -205,13 +205,6 @@ int main(int argc, char **argv)
         }
         if (t_id == n_replica_walkers - 1) {
           write_configuration(replicas[t_id].flux);
-          for (i = 0; i < n_replica_walkers; i++) {
-            printf("rep: %d beta: %lf \n", i, replicas[i].beta);
-            for (b = 0; b < latt.Nb; b++) {
-              printf("%d, ", replicas[i].flux->flux[b]);
-            }
-            printf("\n");
-          }
         }
       }
 
