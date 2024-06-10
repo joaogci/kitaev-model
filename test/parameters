@@ -4,7 +4,7 @@ Ly            = 2   ! Number of unit lattices on the x direction
 /
 
 &Simulation
-beta          = 100       ! Inverse temperature
+beta          = 300       ! Inverse temperature
 n_bins        = 10        ! Number of bins 
 mc_sweeps     = 1000     ! Number of measurement cycles per bin
 /
@@ -16,9 +16,9 @@ Kz            = 0.33333
 /
 
 &Replica_Exchange
-n_exchange_steps      = 6   ! Number of total exchanges 
-n_exchange_frequency  = 10  ! The frequency in units of sweeps at which the exchange moves are carried out
-n_replica_walkers     = 2  ! Number of replica configurations
+n_exchange_steps      = 5   ! Number of total exchanges 
+n_exchange_frequency  = 100  ! The frequency in units of sweeps at which the exchange moves are carried out
+n_replica_walkers     = 5  ! Number of replica configurations
 /
 
 &Analysis

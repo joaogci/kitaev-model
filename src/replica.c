@@ -12,7 +12,7 @@ void exchange(double r, Replica *replica_i, Replica *replica_j)
   Flux *flux_tmp;
 
   log_f = log_weight(replica_i->beta, replica_j->flux) + log_weight(replica_j->beta, replica_i->flux);
-  log_f = - log_weight(replica_i->beta, replica_i->flux) - log_weight(replica_j->beta, replica_j->flux);
+  log_f += - log_weight(replica_i->beta, replica_i->flux) - log_weight(replica_j->beta, replica_j->flux);
 
   if (r <= exp(log_f)) {
     flux_tmp = replica_i->flux;
