@@ -15,6 +15,12 @@ Ky            = Ky_R
 Kz            = Kz_R
 /
 
+&Replica_Exchange
+n_exchange_steps      = 6   ! Number of total exchanges 
+n_exchange_frequency  = 10  ! The frequency in units of sweeps at which the exchange moves are carried out
+n_replica_walkers     = 10  ! Number of replica configurations
+/
+
 &Analysis
 n_skip        = 10   ! Skip first n_skip bins
 n_rebin       = 1    ! Takes the average of n_rebin bins

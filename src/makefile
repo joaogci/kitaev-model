@@ -1,12 +1,14 @@
 INCLUDES_MC = flux.h observables.h sampling.h \
-	lattice.h io/io.h rng/pcg_basic.h monte_carlo.h
+	lattice.h io/io.h rng/pcg_basic.h monte_carlo.h \
+	replica.h
 SOURCES_MC = main.c flux.c observables.c sampling.c \
-  lattice.c io/io.c rng/pcg_basic.c monte_carlo.c
+  lattice.c io/io.c rng/pcg_basic.c monte_carlo.c \
+	replica.c
 INCLUDES_ANA = lattice.h io/io.h analysis.h observables.h
 SOURCES_ANA = ana.c lattice.c io/io.c analysis.c observables.c
 
-FLAGS = -O2 
-DEBUG_FLAGS = -Wall -Wshadow
+FLAGS = -O2 -fopenmp
+DEBUG_FLAGS = -g -Wall -Wshadow
 LIBS = -lgsl -lcblas -lm -lgfortran
 
 ifeq ($(OS),Windows_NT)
@@ -26,17 +28,19 @@ endif
 all: main ana
 
 main: read_parameters $(SOURCES_MC) $(INCLUDES_MC)
-	$(CC) -o main $(FLAGS) $(DEBUG_FLAGS) io/read_parameters.o io/read_parameters_analysis.o $(SOURCES_MC) $(LIBS)
+	$(CC) -o main $(FLAGS) $(DEBUG_FLAGS) io/read_parameters.o io/read_parameters_analysis.o io/read_parameters_replica.o $(SOURCES_MC) $(LIBS)
 
 ana: read_parameters $(SOURCES_ANA) $(INCLUDES_ANA) 
-	$(CC) -o ana $(FLAGS) $(DEBUG_FLAGS) io/read_parameters.o io/read_parameters_analysis.o $(SOURCES_ANA) $(LIBS)
+	$(CC) -o ana $(FLAGS) $(DEBUG_FLAGS) io/read_parameters.o io/read_parameters_analysis.o io/read_parameters_replica.o $(SOURCES_ANA) $(LIBS)
 
 read_parameters: io/read_parameters.f90 io/read_parameters_analysis.f90
 	$(FORT) -o io/read_parameters.o -c io/read_parameters.f90
 	$(FORT) -o io/read_parameters_analysis.o -c io/read_parameters_analysis.f90
+	$(FORT) -o io/read_parameters_replica.o -c io/read_parameters_replica.f90
 
 clean: 
 	rm io/read_parameters.o 
 	rm io/read_parameters_analysis.o 
+	rm io/read_parameters_replica.o 
 	rm main
 	rm ana

@@ -31,6 +31,11 @@ void read_parameters(int* Lx, int* Ly, double* beta, int* n_bins, long* mc_sweep
  */
 void read_parameters_analysis(int *n_skip, int* n_rebin);
 
+ /* 
+ * reads parameters for replica exchange
+ */
+void read_parameters_replica(int *n_exchange_steps, int* n_exchange_frequency, int *n_replica_walkers);
+
 /*
  * writes observables
  */
