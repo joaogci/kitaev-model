@@ -11,7 +11,8 @@ while [ ! ${Variable[0]} = "stop" ];   do
     if [ ${Variable[0]} = "Y" ]; then
         export B_R_dir=`echo ${Variable[6]} | sed s/"\.0"//`
         
-        export Dir="Lx"${Variable[1]}"_Ly"${Variable[2]}"_Kx"${Variable[3]}"_Ky"${Variable[4]}"_Kz"${Variable[5]}"_beta"${Variable[6]}        echo $Dir
+        export Dir="Lx"${Variable[1]}"_Ly"${Variable[2]}"_Kx"${Variable[3]}"_Ky"${Variable[4]}"_Kz"${Variable[5]}"_beta"${Variable[6]}        
+        echo $Dir
         cd $Dir
         
         $KITAEV_DIR/src/ana *
