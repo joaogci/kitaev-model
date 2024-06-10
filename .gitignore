@@ -10,6 +10,7 @@ __pycache__/
 *.o
 main
 ana
+*.dSYM/
 
 # Distribution / packaging
 .Python
