@@ -204,7 +204,7 @@ int main(int argc, char **argv)
           write_observables(obs_scal, n_scal, obs_eq, n_eq);
         }
         if (t_id == n_replica_walkers - 1) {
-          write_configuration(&flux_conf);
+          write_configuration(replicas[t_id].flux);
         }
       }
 
