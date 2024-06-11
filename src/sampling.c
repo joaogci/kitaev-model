@@ -78,7 +78,7 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
   int i, j, b, m, p, n;
   int Fij;
   double res, tmp;
-  double E, E2, dEdb;
+  double E, dEdb;
 
   for (i = 0; i < n_scal; i++) {
     obs[i].N++;
@@ -112,8 +112,8 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     E *= - 0.5 * flux_conf->E[n] * tanh(beta * flux_conf->E[n] * 0.5);
     dEdb *= - 0.25 * flux_conf->E[n] * flux_conf->E[n] / (cosh(beta * flux_conf->E[n] * 0.5) * cosh(beta * flux_conf->E[n] * 0.5));
   }
-  obs[2].obs_vec += E / flux_conf->latt->N;
-  obs[3].obs_vec += E * E / (flux_conf->latt->N * flux_conf->latt->N);
+  obs[2].obs_vec += E; // / flux_conf->latt->N;
+  obs[3].obs_vec += E * E; // / (flux_conf->latt->N * flux_conf->latt->N);
   obs[4].obs_vec += dEdb;
 }
 
