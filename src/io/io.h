@@ -24,7 +24,7 @@ typedef struct Ana_info {
 /*
  *  reads input file for the simulation - Fortran function 
  */
-void read_parameters(int* Lx, int* Ly, double* beta, int* n_bins, long* mc_sweeps, double* Kx, double* Ky, double* Kz);
+void read_parameters(int* Lx, int* Ly, double* beta, int* n_bins, long* mc_sweeps, double* alpha);
 
 /* 
  * reads parameters for analysis

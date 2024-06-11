@@ -31,12 +31,13 @@ double beta;
 // Hamiltonian
 Flux flux_conf;
 int *flux;
+double alpha;
 double K[3];
 
 // Observables
 Obs_scalar* obs_scal;
 Obs_latt* obs_eq;
-int n_scal = 2;
+int n_scal = 5;
 int n_eq = 0;
 
 // Replica Exchange 
@@ -66,7 +67,10 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  read_parameters(&Lx, &Ly, &beta, &(sim.n_bins), &(sim.mc_sweeps), &(K[0]), &(K[1]), &(K[2]));
+  read_parameters(&Lx, &Ly, &beta, &(sim.n_bins), &(sim.mc_sweeps), &(alpha));
+  K[0] = alpha/3.0;
+  K[1] = alpha/3.0;
+  K[2] = 1.0 - 2.0*alpha/3.0;
 
   // Lattice
   make_lattice(Lx, Ly, &latt);

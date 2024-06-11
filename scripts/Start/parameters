@@ -10,9 +10,7 @@ mc_sweeps     = NSW_R     ! Number of measurement cycles per bin
 /
 
 &Hamiltonian
-Kx            = Kx_R
-Ky            = Ky_R
-Kz            = Kz_R
+alpha          = alpha_R
 /
 
 &Replica_Exchange

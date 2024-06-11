@@ -10,9 +10,7 @@ mc_sweeps     = 1000     ! Number of measurement cycles per bin
 /
 
 &Hamiltonian
-Kx            = 0.33333
-Ky            = 0.33333
-Kz            = 0.33333
+alpha         = 1.0
 /
 
 &Replica_Exchange

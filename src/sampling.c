@@ -14,9 +14,13 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
       init_obs_scalar("W", &(obs_scalar[n]));
       break;
     case 2:
-      init_obs_scalar("n", &(obs_scalar[n]));
+      init_obs_scalar("E", &(obs_scalar[n]));
       break;
     case 3:
+      init_obs_scalar("E2", &(obs_scalar[n]));
+      break;
+    case 4:
+      init_obs_scalar("dE_dbeta", &(obs_scalar[n]));
       break;
     default:
       printf("Observable not found. \n");
@@ -71,9 +75,10 @@ void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, double
 
 void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf)
 {
-  int i, j, b, m, p;
+  int i, j, b, m, p, n;
   int Fij;
   double res, tmp;
+  double E, E2, dEdb;
 
   for (i = 0; i < n_scal; i++) {
     obs[i].N++;
@@ -100,6 +105,16 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     res += tmp;
   }
   obs[1].obs_vec += res / flux_conf->latt->N;
+
+  E = 1.0;
+  dEdb = 1.0;
+  for (n = 0; n < flux_conf->latt->N; n++) {
+    E *= - 0.5 * flux_conf->E[n] * tanh(beta * flux_conf->E[n] * 0.5);
+    dEdb *= - 0.25 * flux_conf->E[n] * flux_conf->E[n] / (cosh(beta * flux_conf->E[n] * 0.5) * cosh(beta * flux_conf->E[n] * 0.5));
+  }
+  obs[2].obs_vec += E / flux_conf->latt->N;
+  obs[3].obs_vec += E * E / (flux_conf->latt->N * flux_conf->latt->N);
+  obs[4].obs_vec += dEdb;
 }
 
 void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
