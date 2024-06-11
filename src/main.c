@@ -91,7 +91,7 @@ int main(int argc, char **argv)
   if (beta >= 75.0) {
     read_parameters_replica(&n_exchange_steps, &n_exchange_frequency, &n_replica_walkers);
     replica_exchange = true;
-    beta_init = 0.2 * beta;
+    beta_init = 50.0;
 
     replicas = (Replica *) malloc(n_replica_walkers * sizeof(Replica));
     flux_replicas = (Flux *) malloc(n_replica_walkers * sizeof(Flux));
