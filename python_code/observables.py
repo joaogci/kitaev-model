@@ -32,5 +32,41 @@ class ObsScalar(Obs):
     self.obs_vec = complex(0.0)
 
 class ObsLatt(Obs):
-  pass
+  def __init__(self, name: str, latt: Lattice):
+    super().__init__(name)
+    self.latt = latt
+    self.obs_latt = np.zeros((self.latt.N, self.latt.N), dtype=complex)
+    
+    self.obs_k = np.zeros(self.latt.N, dtype=complex)
+    self.obs_r = np.zeros(self.latt.N, dtype=complex)
+  
+  def write_to_file(self):
+    for i in range(self.latt.N):
+      for j in range(self.latt.N):
+        self.obs_latt[i, j] = self.obs_latt[i, j] / self.N
+    
+    self.fourier_transform() 
+    self.inv_fourier_transform()
+    
+    with open(self.name + "_eqR", "a") as f:
+      for i in range(self.latt.N):
+        f.write(f"{self.latt.r_unit_cell[i, 0]} {self.latt.r_unit_cell[i, 1]} {np.real(self.obs_r[i])} {np.imag(self.obs_r[i])}\n")
 
+    with open(self.name + "_eqK", "a") as f:
+      for i in range(self.latt.N):
+        f.write(f"{self.latt.k_unit_cell[i, 0]} {self.latt.k_unit_cell[i, 1]} {np.real(self.obs_k[i])} {np.imag(self.obs_k[i])}\n")
+  
+  def reset(self):
+    self.N = 0
+    self.obs_latt = np.zeros((self.latt.N, self.latt.N), dtype=complex)
+
+  def fourier_transform(self):
+    for n in range(self.latt.N):
+      for i in range(self.latt.N):
+        for j in range(self.latt.N):
+          self.obs_k[n] += np.exp(- 1.0j * self.latt.k_unit_cell[n,:]@(self.latt.r_unit_cell[i,:] - self.latt.r_unit_cell[j,:])) * self.obs_latt[i,j] / self.latt.N
+
+  def inv_fourier_transform(self):
+    for i in range(self.latt.N):
+      for n in range(self.latt.N):
+        self.obs_r[i] += np.exp(1.0j * self.latt.k_unit_cell[n,:]@self.latt.r_unit_cell[i,:]) * self.obs_k[n] / self.latt.N

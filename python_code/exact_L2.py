@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import os
 from itertools import product
 
-from .sampling import Sampling
-from .lattice import Lattice
-from .flux import Flux
-from .analysis import Analysis
+from sampling import Sampling
+from lattice import Lattice
+from flux import Flux
+from analysis import Analysis
 
 import scienceplots
 plt.style.use("science")
@@ -18,15 +18,17 @@ Lx, Ly = 2, 2
 K = [1.0/3.0, 1.0/3.0, 1.0/3.0]
 
 # T_vals = np.arange(0.01, 4.0 + 0.05, 0.05)
-T_vals = np.logspace(-2.5, 1, 400, base=10)
+T_vals = np.logspace(-2.5, 1, 200, base=10)
 beta_vals = 1.0 / T_vals
 
 n_sims = len(T_vals)
+n_sims = 1
+beta_vals[0] = 100
 
 for i in range(n_sims): 
   latt = Lattice(Lx, Ly)
   flux = Flux(K, latt)
-  sampling_obs = Sampling(3, 0, latt)
+  sampling_obs = Sampling(3, 1, latt)
   
   all_flux_configurations = product([-1.0, 1.0], repeat=latt.Nb)
 
