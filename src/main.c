@@ -38,7 +38,7 @@ double K[3];
 Obs_scalar* obs_scal;
 Obs_latt* obs_eq;
 int n_scal = 5;
-int n_eq = 0;
+int n_eq = 1;
 
 // Replica Exchange 
 Replica *replicas;
