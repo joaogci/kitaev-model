@@ -33,7 +33,7 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
     switch (n)
     {
     case 0:
-      init_obs_latt("Sz", latt, &(obs_eq[n]));
+      init_obs_latt("Dimer", latt, &(obs_eq[n]));
       break;
     default:
       printf("Observable not found. \n");
@@ -121,11 +121,38 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
 
 void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
 {
-  // int i, j; // , a, b, p;
+  int i, j, ip, jp, b, bp, k, q, p, pp;
+  int Fij, Fijp;
+  double res_PP, res_PH;
 
-  // for (i = 0; i < n_eq; i++) {
-  //   obs[i].N++;
-  // }
+  for (i = 0; i < n_eq; i++) {
+    obs[i].N++;
+  }
+
+  for (p = 0; p < flux_conf->latt->N; p++) {
+    b = flux_conf->latt->z_bonds[p];
+    i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
+    j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
+    Fij = flux_conf->flux[b];
+
+    for (pp = 0; pp < flux_conf->latt->N; pp++) {
+      bp = flux_conf->latt->z_bonds[pp];
+      ip = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][0]];
+      jp = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][1]];
+      Fijp = flux_conf->flux[bp];
+
+      res_PP = 0.0;
+      res_PH = 0.0;
+
+      for (k = 0; k < flux_conf->latt->N; k++) {
+        for (q = 0; q < flux_conf->latt->N; q++) {
+          res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*fermi_function(beta, flux_conf->E[q]) + (1.0-fermi_function(beta, flux_conf->E[k]))*(1.0-fermi_function(beta, flux_conf->E[q])));
+          res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*(1.0-fermi_function(beta, flux_conf->E[q])) + (1.0-fermi_function(beta, flux_conf->E[k]))*fermi_function(beta, flux_conf->E[q]));
+        }
+      }
+      obs->obs_latt[p][pp] += Fij * Fijp * (res_PP + res_PH);
+    }    
+  }
 }
 
 void free_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq)
