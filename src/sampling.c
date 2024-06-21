@@ -1,6 +1,6 @@
 #include "sampling.h"
 
-void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Lattice *latt)
+void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, Lattice *latt)
 {
   int n;
 
@@ -41,9 +41,22 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
       break;
     }
   }
+
+  for (n = 0; n < n_spec; n++) {
+    switch (n)
+    {
+    case 0:
+      init_obs_spectral("Dimer", 300, 6.0, latt, &(obs_spec[n]));
+      break;
+    default:
+      printf("Observable not found. \n");
+      exit(1);
+      break;
+    }
+  }
 }
 
-void reset_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq)
+void reset_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec)
 {
   int n;
 
@@ -54,9 +67,13 @@ void reset_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int
   for (n = 0; n < n_eq; n++) {
     reset_obs_latt(&(obs_eq[n]));
   }
+
+  for (n = 0; n < n_spec; n++) {
+    reset_obs_spectral(&(obs_spec[n]));
+  }
 }
 
-void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, double beta, Flux *flux_conf)
+void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, double beta, Flux *flux_conf)
 {
   int i; 
   for (i = 0; i < flux_conf->latt->N * flux_conf->latt->N; i++) {
@@ -70,6 +87,10 @@ void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, double
 
   if (n_eq > 0) {
     sample_obs_eq(obs_eq, n_eq, beta, flux_conf);
+  }
+
+  if (n_spec > 0) {
+    sample_obs_spec(obs_spec, n_spec, beta, flux_conf);
   }
 }
 
@@ -150,16 +171,64 @@ void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
           res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*(1.0-fermi_function(beta, flux_conf->E[q])) + (1.0-fermi_function(beta, flux_conf->E[k]))*fermi_function(beta, flux_conf->E[q]));
         }
       }
-      obs->obs_latt[p][pp] += Fij * Fijp * (res_PP + res_PH);
+      obs[0].obs_latt[p][pp] += Fij * Fijp * (res_PP + res_PH);
     }    
   }
 }
 
-void free_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq)
+void sample_obs_spec(Obs_spectral *obs, int n_spec, double beta, Flux *flux_conf)
+{
+  int i, j, ip, jp, b, bp, k, q, p, pp, n;
+  int Fij, Fijp;
+  double _Complex res_PP, res_PH;
+
+  for (i = 0; i < n_spec; i++) {
+    obs[i].N++;
+  }
+
+  for (n = 0; n < obs[0].n_om; n++) {
+    for (p = 0; p < flux_conf->latt->N; p++) {
+      b = flux_conf->latt->z_bonds[p];
+      i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
+      j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
+      Fij = flux_conf->flux[b];
+
+      for (pp = 0; pp < flux_conf->latt->N; pp++) {
+        bp = flux_conf->latt->z_bonds[pp];
+        ip = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][0]];
+        jp = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][1]];
+        Fijp = flux_conf->flux[bp];
+
+        res_PP = 0.0;
+        res_PH = 0.0;
+
+        for (k = 0; k < flux_conf->latt->N; k++) {
+          for (q = 0; q < flux_conf->latt->N; q++) {
+            res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*fermi_function(beta, flux_conf->E[q]) * delta(obs[0].omega[n], - (flux_conf->E[q] + flux_conf->E[k])) + (1.0-fermi_function(beta, flux_conf->E[k]))*(1.0-fermi_function(beta, flux_conf->E[q])) * delta(obs[0].omega[n], (flux_conf->E[q] + flux_conf->E[k])));
+            res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*(1.0-fermi_function(beta, flux_conf->E[q])) * delta(obs[0].omega[n], (flux_conf->E[k] - flux_conf->E[q])) + (1.0-fermi_function(beta, flux_conf->E[k]))*fermi_function(beta, flux_conf->E[q]) * delta(obs[0].omega[n], - (flux_conf->E[k] - flux_conf->E[q])));
+          }
+        }
+
+        obs[0].obs_latt[n][p][pp] += - Fij * Fijp * cimag(res_PP + res_PH);
+      }    
+    }
+  }
+}
+
+void free_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec)
 {
   int n;
 
   for (n = 0; n < n_eq; n++) {
     free_obs_latt(&(obs_eq[n]));
   }
+
+  for (n = 0; n < n_spec; n++) {
+    free_obs_spectral(&(obs_spec[n]));
+  }
+}
+
+double _Complex delta(double _Complex om, double dE)
+{
+  return 1.0 / (om - dE);
 }

@@ -37,8 +37,10 @@ double K[3];
 // Observables
 Obs_scalar* obs_scal;
 Obs_latt* obs_eq;
+Obs_spectral* obs_spec;
 int n_scal = 5;
 int n_eq = 1;
+int n_spec = 1;
 
 // Replica Exchange 
 Replica *replicas;
@@ -86,7 +88,8 @@ int main(int argc, char **argv)
   // Observables
   obs_scal = (Obs_scalar*) malloc(n_scal * sizeof(Obs_scalar));
   obs_eq = (Obs_latt*) malloc(n_eq * sizeof(Obs_latt));
-  set_observables(obs_scal, n_scal, obs_eq, n_eq, &latt);
+  obs_spec = (Obs_spectral*) malloc(n_spec * sizeof(Obs_spectral));
+  set_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, &latt);
 
   // Replica Exchange
   replica_exchange = false;
@@ -138,7 +141,7 @@ int main(int argc, char **argv)
   if (!replica_exchange) {
     // Normal Monte Carlo
     for (n = 0; n < sim.n_bins; n++) {
-      reset_observables(obs_scal, n_scal, obs_eq, n_eq);
+      reset_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
 
       for (t = 0; t < sim.mc_sweeps; t++) {
         for (i = 0; i < latt.N; i++) {
@@ -147,19 +150,19 @@ int main(int argc, char **argv)
         }
 
         if (n_scal > 0 || n_eq > 0) {
-          sample(obs_scal, n_scal, obs_eq, n_eq, beta, &flux_conf);
+          sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, beta, &flux_conf);
         }
       }
 
       // Write bin to file
       if (n_scal > 0 || n_eq > 0) {
-        write_observables(obs_scal, n_scal, obs_eq, n_eq);
+        write_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
       }
       write_configuration(&flux_conf);
     }
   } else {
     // Replica Exchange Monte Carlo for low temperatures
-    #pragma omp parallel default(shared) private(obs_scal, obs_eq, rng, new_flux_conf, n, t, i, b)
+    #pragma omp parallel default(shared) private(obs_scal, obs_eq, obs_spec, rng, new_flux_conf, n, t, i, b)
     {
       int n_ex, i_ex;
       int t_id;
@@ -171,11 +174,12 @@ int main(int argc, char **argv)
 
       obs_scal = (Obs_scalar*) malloc(n_scal * sizeof(Obs_scalar));
       obs_eq = (Obs_latt*) malloc(n_eq * sizeof(Obs_latt));
-      set_observables(obs_scal, n_scal, obs_eq, n_eq, &latt);
+      obs_spec = (Obs_spectral*) malloc(n_spec * sizeof(Obs_spectral));
+      set_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, &latt);
 
       for (n = 0; n < sim.n_bins; n++) {
         if (t_id == n_replica_walkers - 1) {
-          reset_observables(obs_scal, n_scal, obs_eq, n_eq);
+          reset_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
         }
 
         for (t = 0; t < sim.mc_sweeps; t++) {
@@ -185,7 +189,7 @@ int main(int argc, char **argv)
           }
 
           if (t_id == n_replica_walkers - 1 && (n_scal > 0 || n_eq > 0)) {
-            sample(obs_scal, n_scal, obs_eq, n_eq, replicas[t_id].beta, replicas[t_id].flux);
+            sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, replicas[t_id].beta, replicas[t_id].flux);
           }
 
           // Exchange configurations
@@ -205,15 +209,17 @@ int main(int argc, char **argv)
 
         // Write bin to file
         if (t_id == n_replica_walkers - 1 && (n_scal > 0 || n_eq > 0)) {
-          write_observables(obs_scal, n_scal, obs_eq, n_eq);
+          write_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
         }
         if (t_id == n_replica_walkers - 1) {
           write_configuration(replicas[t_id].flux);
         }
       }
 
+      free_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
       free(obs_scal);
       free(obs_eq);
+      free(obs_spec);
       free_flux(&new_flux_conf);
     }
   }
@@ -229,8 +235,10 @@ int main(int argc, char **argv)
   // FREE THE VARIABLES
   free_lattice(&latt);
   free_flux(&flux_conf);
+  free_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
   free(obs_eq);
   free(obs_scal);
+  free(obs_spec);
   free(flux);
 
   if (replica_exchange) {

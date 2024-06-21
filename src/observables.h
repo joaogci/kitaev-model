@@ -42,43 +42,46 @@ typedef struct Obs_latt
 } Obs_latt;
 
 /* 
- * Struct for transport coefficients
+ * Struct for spectral functions
  */
-// typedef struct Obs_transport
-// {
-//   u_int64_t N;
-//   char filename[BUFFER];
+typedef struct Obs_spectral
+{
+  u_int64_t N;
+  char filename[BUFFER];
   
-//   int x;
-//   int y;
-//   int n_max;
-//   double beta;
-//   double* omega_n;
+  int n_om;
+  double om_f, eta;
+  double _Complex* omega;
 
-//   double _Complex* obs_transport;
-// } Obs_transport;
+  double _Complex*** obs_latt;
+  double _Complex **obs_k, **obs_i;
+  Lattice *latt;
+} Obs_spectral;
 
 
 void init_obs_scalar(char* filename, Obs_scalar* obs);
 void init_obs_latt(char* filename, Lattice* latt, Obs_latt* obs);
-// void init_obs_transport(char* filename, int x, int y, double beta, int n_max, Obs_transport* obs);
+void init_obs_spectral(char* filename, int n_om, double om_f, Lattice *latt, Obs_spectral* obs);
 
 void reset_obs_scalar(Obs_scalar* obs);
 void reset_obs_latt(Obs_latt* obs);
-// void reset_obs_transport(Obs_transport* obs);
+void reset_obs_spectral(Obs_spectral* obs);
 
 void write_obs_scalar(FILE* out, Obs_scalar* obs);
 void write_obs_latt(FILE* out_i, FILE* out_k, Obs_latt* obs);
-// void write_obs_transport(FILE* out, Obs_transport* obs);
+void write_obs_spectral(FILE* out_i, FILE* out_k, Obs_spectral* obs);
 
 void write_obs_scalar_info(FILE* info, Obs_scalar* obs);
 void write_obs_eq_info(FILE* info, Obs_latt* obs);
-// void write_obs_transport_info(FILE* out, Obs_transport* obs);
+void write_obs_spectral_info(FILE* out, Obs_spectral* obs);
 
 void free_obs_latt(Obs_latt* obs);
-// void free_obs_transport(Obs_transport* obs);
+void free_obs_spectral(Obs_spectral* obs);
 
 void fourier_trans(Obs_latt* obs);
 void inv_fourier_trans(Obs_latt* obs);
+
+void spec_fourier_trans(Obs_spectral* obs);
+void spec_inv_fourier_trans(Obs_spectral* obs);
 
 #endif // OBSRVABLES_H

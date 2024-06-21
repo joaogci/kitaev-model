@@ -1,6 +1,6 @@
 #include "io.h"
 
-void write_observables(Obs_scalar* obs_scal, int n_scal, Obs_latt* obs_eq, int n_eq)
+void write_observables(Obs_scalar* obs_scal, int n_scal, Obs_latt* obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec)
 {
   int i;
   FILE* out,* out_i,* out_k,* info;
@@ -44,6 +44,33 @@ void write_observables(Obs_scalar* obs_scal, int n_scal, Obs_latt* obs_eq, int n
     strcat(filename, "_eqK_info");
     info = fopen(filename, "w");
     write_obs_eq_info(info, &(obs_eq[i]));
+    fclose(info);
+  }
+
+  for (i = 0; i < n_spec; i++) {
+    strcpy(filename, obs_spec[i].filename);
+    strcat(filename, "_specR");
+    out_i = fopen(filename, "a");
+
+    strcpy(filename, obs_spec[i].filename);
+    strcat(filename, "_specK");
+    out_k = fopen(filename, "a");
+
+    write_obs_spectral(out_i, out_k, &(obs_spec[i]));
+
+    fclose(out_i);
+    fclose(out_k);
+
+    strcpy(filename, obs_spec[i].filename);
+    strcat(filename, "_specR_info");
+    info = fopen(filename, "w");
+    write_obs_spectral_info(info, &(obs_spec[i]));
+    fclose(info);
+
+    strcpy(filename, obs_spec[i].filename);
+    strcat(filename, "_specK_info");
+    info = fopen(filename, "w");
+    write_obs_spectral_info(info, &(obs_spec[i]));
     fclose(info);
   }
 }

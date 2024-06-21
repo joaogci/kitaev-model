@@ -39,7 +39,7 @@ void read_parameters_replica(int *n_exchange_steps, int* n_exchange_frequency, i
 /*
  * writes observables
  */
-void write_observables(Obs_scalar* obs_scal, int n_scal, Obs_latt* obs_eq, int n_eq);
+void write_observables(Obs_scalar* obs_scal, int n_scal, Obs_latt* obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec);
 
 // /*
 //  * Writes transport observables
