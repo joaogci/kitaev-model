@@ -93,8 +93,8 @@ int main(int argc, char** argv)
           break;
         case 'e':
           getline(&line, &len, info);
-          fscanf(info, "L1: %d\n", &Lx);
-          fscanf(info, "L2: %d\n", &Ly);
+          fscanf(info, "Lx: %d\n", &Lx);
+          fscanf(info, "Ly: %d\n", &Ly);
 
           make_lattice(Lx, Ly, &latt);
           

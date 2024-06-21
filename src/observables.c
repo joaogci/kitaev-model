@@ -97,8 +97,8 @@ void write_obs_latt(FILE* out_i, FILE* out_k, Obs_latt* obs)
   inv_fourier_trans(obs);
 
   for (i = 0; i < obs->latt->N; i++) {
-    fprintf(out_i, "(%lf, %lf) (%lf, %lf) \n", (double) obs->latt->r[i][0], 
-                                               (double) obs->latt->r[i][1], 
+    fprintf(out_i, "(%lf, %lf) (%lf, %lf) \n", (double) (obs->latt->r[i][0] * obs->latt->a_1[0] + obs->latt->r[i][1] * obs->latt->a_2[0]), 
+                                               (double) (obs->latt->r[i][0] * obs->latt->a_1[1] + obs->latt->r[i][1] * obs->latt->a_2[1]), 
                                                creal(obs->obs_i[i]), 
                                                cimag(obs->obs_i[i]));
   }
@@ -173,8 +173,8 @@ void fourier_trans(Obs_latt* obs)
       for (j = 0; j < obs->latt->N; j++) {
         a[0] = obs->latt->k[n][0] * obs->latt->b_1[0] + obs->latt->k[n][1] * obs->latt->b_2[0];
         a[1] = obs->latt->k[n][0] * obs->latt->b_1[1] + obs->latt->k[n][1] * obs->latt->b_2[1];
-        b[0] = obs->latt->r_ij[i][j][0];
-        b[1] = obs->latt->r_ij[i][j][1];
+        b[0] = obs->latt->r_ij[i][j][0] * obs->latt->a_1[0] + obs->latt->r_ij[i][j][1] * obs->latt->a_2[0];
+        b[1] = obs->latt->r_ij[i][j][0] * obs->latt->a_1[1] + obs->latt->r_ij[i][j][1] * obs->latt->a_2[1];
 
         obs->obs_k[n] += cexp(- I * (a[0] * b[0] + a[1] * b[1])) * (obs->obs_latt[i][j] - obs->obs_latt0[i] * obs->obs_latt0[j]) / (obs->latt->N);
       }
@@ -191,8 +191,8 @@ void inv_fourier_trans(Obs_latt* obs)
     for (n = 0; n < obs->latt->N; n++) {
       a[0] = obs->latt->k[n][0] * obs->latt->b_1[0] + obs->latt->k[n][1] * obs->latt->b_2[0];
       a[1] = obs->latt->k[n][0] * obs->latt->b_1[1] + obs->latt->k[n][1] * obs->latt->b_2[1];
-      b[0] = obs->latt->r[i][0];
-      b[1] = obs->latt->r[i][1];
+      b[0] = obs->latt->r[i][0] * obs->latt->a_1[0] + obs->latt->r[i][1] * obs->latt->a_2[0];
+      b[1] = obs->latt->r[i][0] * obs->latt->a_1[1] + obs->latt->r[i][1] * obs->latt->a_2[1];
 
       obs->obs_i[i] += cexp(I * (a[0] * b[0] + a[1] * b[1])) * obs->obs_k[n] / (obs->latt->N);
     }

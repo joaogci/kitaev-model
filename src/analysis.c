@@ -49,13 +49,15 @@ void analyse_latt(FILE* fp, Ana_latt* obs, Lattice *latt, int n_bins, Ana_info *
 
   n_bins = n_bins - ana_info->n_skip;
   measurements = (double _Complex**) malloc(n_bins * sizeof(double _Complex*));
-  for (i = 0; i < n_bins; i++) {
-    measurements[i] = (double _Complex*) malloc(latt->N * sizeof(double _Complex));
+  for (i = 0; i < n_bins + ana_info->n_skip; i++) {
+    if (i >= ana_info->n_skip) {
+      measurements[i - ana_info->n_skip] = (double _Complex*) malloc(latt->N * sizeof(double _Complex));
+    }
 
     for (n = 0; n < latt->N; n++) {
       fscanf(fp, "(%lf, %lf) (%lf, %lf) \n", &x, &y, &real, &imag);
       if (i >= ana_info->n_skip) {
-        measurements[i][n] = real + I * imag;
+        measurements[i - ana_info->n_skip][n] = real + I * imag;
       }
     }
   }
@@ -159,7 +161,7 @@ void write_latt_r(FILE* fp, Ana_latt* obs, Lattice* latt)
   int i;
 
   for (i = 0; i < latt->N; i++) {
-    fprintf(fp, "%lf %lf \n", (double) latt->r[i][0], (double) latt->r[i][1]);
+    fprintf(fp, "%lf %lf \n", (double) (latt->r[i][0] * latt->a_1[0] + latt->r[i][1] * latt->a_2[0]), (double) (latt->r[i][0] * latt->a_1[1] + latt->r[i][1] * latt->a_2[1]));
     fprintf(fp, "%lf, %lf %lf, %lf \n", creal(obs->obs_mean[i]), creal(obs->obs_std[i]), cimag(obs->obs_mean[i]), cimag(obs->obs_std[i]));
   }
 }
