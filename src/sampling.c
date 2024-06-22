@@ -85,13 +85,13 @@ void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_sp
     sample_obs_scalar(obs_scal, n_scal, beta, flux_conf);
   }
 
-  if (n_eq > 0) {
-    sample_obs_eq(obs_eq, n_eq, beta, flux_conf);
-  }
+  // if (n_eq > 0) {
+  //   sample_obs_eq(obs_eq, n_eq, beta, flux_conf);
+  // }
 
-  if (n_spec > 0) {
-    sample_obs_spec(obs_spec, n_spec, beta, flux_conf);
-  }
+  // if (n_spec > 0) {
+  //   sample_obs_spec(obs_spec, n_spec, beta, flux_conf);
+  // }
 }
 
 void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf)
