@@ -32,9 +32,9 @@ void init_obs_spectral(char* filename, int n_om, double om_f, Lattice *latt, Obs
   obs->eta = om_f / (n_om - 1);
   obs->latt = latt;
 
-  obs->omega = (double _Complex*) malloc(n_om * sizeof(double _Complex));
+  obs->omega = (double*) malloc(n_om * sizeof(double));
   for (n = 0; n < n_om; n++) {
-    obs->omega[n] = n * om_f / (n_om - 1) + I * obs->eta;
+    obs->omega[n] = n * om_f / (n_om - 1);
   }
 
   obs->obs_latt = (double _Complex***) malloc(obs->n_om * sizeof(double _Complex**));

@@ -18,6 +18,7 @@ void init_flux(double K[3], Lattice *latt, Flux *flux_conf)
   flux_conf->YT = (double *) malloc(flux_conf->latt->N * flux_conf->latt->N * sizeof(double));
   flux_conf->A = (double *) malloc(flux_conf->latt->N * flux_conf->latt->N * sizeof(double));
   flux_conf->B = (double *) malloc(flux_conf->latt->N * flux_conf->latt->N * sizeof(double));
+  flux_conf->fermi_func = (double *) malloc(flux_conf->latt->N * sizeof(double));
 }
 
 void set_flux(int *flux, Flux *flux_conf)
@@ -154,6 +155,7 @@ void free_flux(Flux *flux_conf)
   free(flux_conf->YT);
   free(flux_conf->A);
   free(flux_conf->B);
+  free(flux_conf->fermi_func);
   free(flux_conf->E);
   free(flux_conf->flux);
 }

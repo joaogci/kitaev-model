@@ -51,7 +51,7 @@ typedef struct Obs_spectral
   
   int n_om;
   double om_f, eta;
-  double _Complex* omega;
+  double* omega;
 
   double _Complex*** obs_latt;
   double _Complex **obs_k, **obs_i;

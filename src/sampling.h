@@ -46,6 +46,6 @@ void sample_obs_spec(Obs_spectral *obs, int n_spec, double beta, Flux *flux_conf
  */
 void free_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec);
 
-double _Complex delta(double _Complex om, double dE);
+double _Complex delta(double om, double eta, double dE);
 
 #endif // SAMPLING_H

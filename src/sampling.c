@@ -80,6 +80,9 @@ void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_sp
     flux_conf->A[i] = flux_conf->XT[i] + flux_conf->YT[i];
     flux_conf->B[i] = flux_conf->XT[i] - flux_conf->YT[i];
   }
+  for (i = 0; i < flux_conf->latt->N; i++) {
+    flux_conf->fermi_func[i] = fermi_function(beta, flux_conf->E[i]);
+  }
 
   if (n_scal > 0) {
     sample_obs_scalar(obs_scal, n_scal, beta, flux_conf);
@@ -112,7 +115,7 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
     Fij = flux_conf->flux[b];
     for (m = 0; m < flux_conf->latt->N; m++) {
-      res += Fij * flux_conf->A[i * flux_conf->latt->N + m] * flux_conf->B[j * flux_conf->latt->N + m] * (1.0 - 2.0 * fermi_function(beta, flux_conf->E[m]));
+      res += Fij * flux_conf->A[i * flux_conf->latt->N + m] * flux_conf->B[j * flux_conf->latt->N + m] * (1.0 - 2.0 * flux_conf->fermi_func[m]);
     }
   }
   obs[0].obs_vec += res / flux_conf->latt->N;
@@ -167,8 +170,8 @@ void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
 
       for (k = 0; k < flux_conf->latt->N; k++) {
         for (q = 0; q < flux_conf->latt->N; q++) {
-          res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*fermi_function(beta, flux_conf->E[q]) + (1.0-fermi_function(beta, flux_conf->E[k]))*(1.0-fermi_function(beta, flux_conf->E[q])));
-          res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*(1.0-fermi_function(beta, flux_conf->E[q])) + (1.0-fermi_function(beta, flux_conf->E[k]))*fermi_function(beta, flux_conf->E[q]));
+          res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (flux_conf->fermi_func[k]*flux_conf->fermi_func[q] + (1.0-flux_conf->fermi_func[k])*(1.0-flux_conf->fermi_func[q]));
+          res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) + (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q]);
         }
       }
       obs[0].obs_latt[p][pp] += Fij * Fijp * (res_PP + res_PH);
@@ -204,8 +207,29 @@ void sample_obs_spec(Obs_spectral *obs, int n_spec, double beta, Flux *flux_conf
 
         for (k = 0; k < flux_conf->latt->N; k++) {
           for (q = 0; q < flux_conf->latt->N; q++) {
-            res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*fermi_function(beta, flux_conf->E[q]) * delta(obs[0].omega[n], - (flux_conf->E[q] + flux_conf->E[k])) + (1.0-fermi_function(beta, flux_conf->E[k]))*(1.0-fermi_function(beta, flux_conf->E[q])) * delta(obs[0].omega[n], (flux_conf->E[q] + flux_conf->E[k])));
-            res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * (fermi_function(beta, flux_conf->E[k])*(1.0-fermi_function(beta, flux_conf->E[q])) * delta(obs[0].omega[n], (flux_conf->E[k] - flux_conf->E[q])) + (1.0-fermi_function(beta, flux_conf->E[k]))*fermi_function(beta, flux_conf->E[q]) * delta(obs[0].omega[n], - (flux_conf->E[k] - flux_conf->E[q])));
+            res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+              (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+              (// flux_conf->fermi_func[k]*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[q] + flux_conf->E[k])) +
+              (1.0-flux_conf->fermi_func[k])*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[q] + flux_conf->E[k]))); 
+
+            if (flux_conf->E[k] - flux_conf->E[q] > 0) {
+              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+                (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q]))); 
+            } else if (flux_conf->E[k] - flux_conf->E[q] < 0) {
+              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+                ((1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
+            } else {
+              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+                (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q])) + 
+                (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
+            }
+            // res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+            //     (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+            //     (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q])) + 
+            //     (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q])));
           }
         }
 
@@ -228,7 +252,7 @@ void free_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int 
   }
 }
 
-double _Complex delta(double _Complex om, double dE)
+double _Complex delta(double om, double eta, double dE)
 {
-  return 1.0 / (om - dE);
+  return  - (om - dE + I * eta) / ((om - dE) * (om - dE) + eta * eta);
 }

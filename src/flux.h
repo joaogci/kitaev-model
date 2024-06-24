@@ -28,6 +28,7 @@ typedef struct Flux
 
   double *A;
   double *B;
+  double *fermi_func;
 
   Lattice *latt;
 } Flux;
