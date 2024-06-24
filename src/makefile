@@ -8,7 +8,7 @@ INCLUDES_ANA = lattice.h io/io.h analysis.h observables.h
 SOURCES_ANA = ana.c lattice.c io/io.c analysis.c observables.c
 
 FLAGS = -O2 -fopenmp
-DEBUG_FLAGS = -g -Wall -Wshadow
+DEBUG_FLAGS = -Wall -Wshadow
 LIBS = -lgsl -lcblas -lm -lgfortran
 
 ifeq ($(OS),Windows_NT)
