@@ -46,7 +46,7 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
     switch (n)
     {
     case 0:
-      init_obs_spectral("Dimer", 300, 6.0, latt, &(obs_spec[n]));
+      init_obs_spectral("Dimer", 200, 4.0, latt, &(obs_spec[n]));
       break;
     default:
       printf("Observable not found. \n");
@@ -209,27 +209,27 @@ void sample_obs_spec(Obs_spectral *obs, int n_spec, double beta, Flux *flux_conf
           for (q = 0; q < flux_conf->latt->N; q++) {
             res_PP += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
               (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] - flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
-              (// flux_conf->fermi_func[k]*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[q] + flux_conf->E[k])) +
+              (flux_conf->fermi_func[k]*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[q] + flux_conf->E[k])) +
               (1.0-flux_conf->fermi_func[k])*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[q] + flux_conf->E[k]))); 
 
-            if (flux_conf->E[k] - flux_conf->E[q] > 0) {
-              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
-                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
-                (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q]))); 
-            } else if (flux_conf->E[k] - flux_conf->E[q] < 0) {
-              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
-                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
-                ((1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
-            } else {
-              res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
-                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
-                (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q])) + 
-                (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
-            }
-            // res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+            // if (flux_conf->E[k] - flux_conf->E[q] > 0) {
+            //   res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+            //     (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+            //     (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q]))); 
+            // } else if (flux_conf->E[k] - flux_conf->E[q] < 0) {
+            //   res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+            //     (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+            //     ((1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
+            // } else {
+            //   res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
             //     (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
             //     (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q])) + 
-            //     (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q])));
+            //     (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q]))); 
+            // }
+            res_PH += flux_conf->A[i * flux_conf->latt->N + k] * flux_conf->B[j * flux_conf->latt->N + q] * 
+                (flux_conf->A[ip * flux_conf->latt->N + k] * flux_conf->B[jp * flux_conf->latt->N + q] + flux_conf->A[ip * flux_conf->latt->N + q] * flux_conf->B[jp * flux_conf->latt->N + k]) * 
+                (flux_conf->fermi_func[k]*(1.0-flux_conf->fermi_func[q]) * delta(obs[0].omega[n], obs[0].eta, (flux_conf->E[k] - flux_conf->E[q])) + 
+                (1.0-flux_conf->fermi_func[k])*flux_conf->fermi_func[q] * delta(obs[0].omega[n], obs[0].eta, - (flux_conf->E[k] - flux_conf->E[q])));
           }
         }
 
