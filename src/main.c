@@ -38,9 +38,9 @@ double K[3];
 Obs_scalar* obs_scal;
 Obs_latt* obs_eq;
 Obs_spectral* obs_spec;
-int n_scal = 5;
-int n_eq = 1;
-int n_spec = 1;
+int n_scal = 7;
+int n_eq = 6;
+int n_spec = 6;
 
 // Replica Exchange 
 Replica *replicas;
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
   if (beta >= 75.0) {
     read_parameters_replica(&n_exchange_steps, &n_exchange_frequency, &n_replica_walkers);
     replica_exchange = true;
-    beta_init = 50.0;
+    beta_init = 55.0;
 
     replicas = (Replica *) malloc(n_replica_walkers * sizeof(Replica));
     flux_replicas = (Flux *) malloc(n_replica_walkers * sizeof(Flux));
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
           monte_carlo_step(b, beta, pcg32_double_r(&rng), &flux_conf, &new_flux_conf);
         }
 
-        if (t % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
+        if ((t + 1) % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
           sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, beta, &flux_conf);
         }
         // if ((n_spec > 0 || n_eq > 0) && (t == sim.mc_sweeps - 1 || t == sim.mc_sweeps / 2)) {
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
             monte_carlo_step(b, replicas[t_id].beta, pcg32_double_r(&rng), replicas[t_id].flux, &new_flux_conf);
           }
 
-          if (t_id == n_replica_walkers - 1 && t % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
+          if (t_id == n_replica_walkers - 1 && (t + 1) % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
             sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, replicas[t_id].beta, replicas[t_id].flux);
           }
           // if (t_id == n_replica_walkers - 1 && (n_spec > 0 || n_eq > 0) && (t == sim.mc_sweeps - 1 || t == sim.mc_sweeps / 2)) {
