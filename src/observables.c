@@ -260,7 +260,7 @@ void spec_fourier_trans(Obs_spectral* obs)
           b[0] = obs->latt->r_ij[i][j][0] * obs->latt->a_1[0] + obs->latt->r_ij[i][j][1] * obs->latt->a_2[0];
           b[1] = obs->latt->r_ij[i][j][0] * obs->latt->a_1[1] + obs->latt->r_ij[i][j][1] * obs->latt->a_2[1];
 
-          obs->obs_k[om][n] += cexp(- I * (a[0] * b[0] + a[1] * b[1])) * obs->obs_latt[om][i][j] / (obs->latt->N);
+          obs->obs_k[om][n] += cexp(- I * (a[0] * b[0] + a[1] * b[1])) * obs->obs_latt[om][i][j]; // / (obs->latt->N);
         }
       }
     }
