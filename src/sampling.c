@@ -232,14 +232,13 @@ void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
         memcpy(bonds_b, flux_conf->latt->z_bonds, flux_conf->latt->N * sizeof(int));
       }
 
-
-      for (p = 0; p < flux_conf->latt->N; p++) {
+      for (p = 0; p < 1; p++) { // 
         b = bonds_a[p];
         i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
         j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
         Fij = flux_conf->flux[b];
 
-        for (pp = 0; pp < flux_conf->latt->N; pp++) {
+        for (pp = 0; pp < flux_conf->latt->N; pp++) { // flux_conf->latt->N
           bp = bonds_b[pp];
           ip = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][0]];
           jp = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][1]];
@@ -293,13 +292,13 @@ void sample_obs_spec(Obs_spectral *obs, int n_spec, double beta, Flux *flux_conf
       }
 
       for (n = 0; n < obs[0].n_om; n++) {
-        for (p = 0; p < flux_conf->latt->N; p++) {
+        for (p = 0; p < 1; p++) { // flux_conf->latt->N
           b = bonds_a[p];
           i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
           j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
           Fij = flux_conf->flux[b];
 
-          for (pp = 0; pp < flux_conf->latt->N; pp++) {
+          for (pp = 0; pp < flux_conf->latt->N; pp++) { // 
             bp = bonds_b[pp];
             ip = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][0]];
             jp = flux_conf->latt->r_sites[flux_conf->latt->bond_list[bp][1]];
