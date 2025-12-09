@@ -20,7 +20,7 @@ else
     FORT = gfortran
   endif
   ifeq ($(UNAME_S),Darwin)
-    CC = gcc-14
+    CC = gcc-15
     FORT = gfortran
   endif
 endif
