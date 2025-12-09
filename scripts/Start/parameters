@@ -13,6 +13,7 @@ mc_sweeps     = NSW_R     ! Number of measurement cycles per bin
 alpha          = alpha_R
 /
 
+! Only available for beta >= 75
 &Replica_Exchange
 n_exchange_steps      = 6   ! Number of total exchanges 
 n_exchange_frequency  = 10  ! The frequency in units of sweeps at which the exchange moves are carried out
