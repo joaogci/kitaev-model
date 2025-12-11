@@ -26,8 +26,8 @@ class Lattice():
     self.inv_k_unit_cell = np.zeros((self.Lx, self.Ly), dtype=int)
    
     n = 0 
-    for i in range(self.Lx):
-      for j in range(self.Ly):
+    for j in range(self.Ly):
+      for i in range(self.Lx):
         self.r_unit_cell[n, :] = i * self.n1 + j * self.n2
         self.inv_r_unit_cell[i, j] = n
         self.k_unit_cell[n, :] = i * self.b1 / self.Lx + j * self.b2 / self.Ly

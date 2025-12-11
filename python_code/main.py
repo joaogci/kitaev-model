@@ -35,7 +35,6 @@ for i in range(n_sims):
   flux = Flux(K, latt)
 
   mc = MonteCarlo(n_sweeps, n_bins, beta_vals[i])
-  mc.init_observables(3, 0, latt)
   mc.set_flux(flux)
 
   sim_name = f"Lx{Lx}_Ly{Ly}_Kx{K[0]:.1f}_Ky{K[1]:.1f}_Kz{K[2]:.1f}_logT{np.log10(T_vals[i]):.3f}"

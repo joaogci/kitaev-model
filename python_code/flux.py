@@ -50,6 +50,18 @@ class Flux():
       return np.sum(np.log(np.exp(beta * self.E) + 1.0) - 0.5 * beta * self.E)
     else: 
       return np.sum(0.5 * beta * self.E)
+    
+  def free_energy(self, beta: float):
+    """
+      Returns ln(W(F)) = sum_n ln(2) + ln(cosh(beta E_n / 2))
+                       = sum_n ln(exp(beta E_n) + 1) - beta E_n / 2
+      For small T, i.e., beta > 100 approximate: 
+            ln(exp(beta E_n) + 1) -> ln(exp(beta E_n)) = beta E_n
+    """
+    if beta <= 100.0:
+      return - beta * np.sum(np.log(np.exp(beta * self.E) + 1.0) - 0.5 * beta * self.E)
+    else: 
+      return - beta * np.sum(0.5 * beta * self.E)
 
   def fermi_function(self, m: int, beta: float):
     if beta * self.E[m] <= 100.0:

@@ -14,7 +14,7 @@ plt.style.use("science")
 SEED = 2024
 np.random.seed(SEED)
 
-Lx, Ly = 3, 3
+Lx, Ly = 2, 2
 K = [1.0/3.0, 1.0/3.0, 1.0/3.0]
 
 # T_vals = np.arange(0.01, 4.0 + 0.05, 0.05)
@@ -22,8 +22,12 @@ T_vals = np.logspace(-2.5, 1, 400, base=10)
 beta_vals = 1.0 / T_vals
 
 n_sims = len(T_vals)
-n_sims = 1
-beta_vals[0] = 100.0
+n_sims = 4
+beta_vals[0] = 100
+beta_vals[1] = 50
+beta_vals[2] = 10
+beta_vals[3] = 1
+T_vals = 1.0 / beta_vals
 
 for i in range(n_sims): 
   latt = Lattice(Lx, Ly)
@@ -32,7 +36,7 @@ for i in range(n_sims):
   
   # all_flux_configurations = product([-1.0, 1.0], repeat=latt.Nb)
 
-  sim_name = f"Lx{Lx}_Ly{Ly}_Kx{K[0]:.1f}_Ky{K[1]:.1f}_Kz{K[2]:.1f}_logT{np.log10(T_vals[i]):.3f}_gs_flux"
+  sim_name = f"Lx{Lx}_Ly{Ly}_alpha1.0_beta{beta_vals[i]:.0f}_gs_flux"
   if not os.path.exists(sim_name):
     os.mkdir(sim_name)
   os.chdir(sim_name)

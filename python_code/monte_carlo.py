@@ -12,6 +12,7 @@ class MonteCarlo():
     self.n_bins = n_bins
     self.beta = beta
     self.wall_time = 0.0
+    self.weights = list()
 
   def set_flux(self, flux: Flux):
     self.__flux = flux
@@ -19,6 +20,26 @@ class MonteCarlo():
   def init_observables(self, n_scal: int, n_eq: int, latt: Lattice):
     self.__sampling_obs = Sampling(n_scal, n_eq, latt)
     self.__latt = latt
+  
+  def simulation_free_energy(self):
+    self.accepted = 0
+
+    flux = np.ones(self.__latt.Nb)
+    self.__flux.set_flux(flux)
+    self.__flux.diagonalise_flux()
+    
+    start = time.time()
+     
+    for b in range(self.n_bins):
+      
+      for t in range(self.n_sweeps):
+        for i in range(self.__latt.N):
+          b_ = np.random.randint(self.__latt.Nb)
+          self.__mc_step(b_)
+          if b != 0:
+            self.weights.append(self.__flux.weight(self.beta))
+    
+    self.wall_time = time.time() - start
   
   def simulation(self):
     self.accepted = 0
