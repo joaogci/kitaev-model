@@ -39,8 +39,8 @@ Obs_scalar* obs_scal;
 Obs_latt* obs_eq;
 Obs_spectral* obs_spec;
 int n_scal = 7;
-int n_eq = 6;
-int n_spec = 6;
+int n_eq = 0;
+int n_spec = 0;
 
 // Replica Exchange 
 Replica *replicas;
@@ -149,7 +149,7 @@ int main(int argc, char **argv)
           monte_carlo_step(b, beta, pcg32_double_r(&rng), &flux_conf, &new_flux_conf);
         }
 
-        if ((t + 1) % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
+        if (n_scal > 0 || n_spec > 0 || n_eq > 0) {
           sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, beta, &flux_conf);
         }
         // if ((n_spec > 0 || n_eq > 0) && (t == sim.mc_sweeps - 1 || t == sim.mc_sweeps / 2)) {
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
             monte_carlo_step(b, replicas[t_id].beta, pcg32_double_r(&rng), replicas[t_id].flux, &new_flux_conf);
           }
 
-          if (t_id == n_replica_walkers - 1 && (t + 1) % 50 == 0 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
+          if (t_id == n_replica_walkers - 1 && (n_scal > 0 || n_spec > 0 || n_eq > 0)) {
             sample(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, replicas[t_id].beta, replicas[t_id].flux);
           }
           // if (t_id == n_replica_walkers - 1 && (n_spec > 0 || n_eq > 0) && (t == sim.mc_sweeps - 1 || t == sim.mc_sweeps / 2)) {
