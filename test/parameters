@@ -1,11 +1,11 @@
 &Lattice
-Lx            = 3   ! Number of unit lattices on the x direction
-Ly            = 3   ! Number of unit lattices on the x direction
+Lx            = 4   ! Number of unit lattices on the x direction
+Ly            = 4   ! Number of unit lattices on the x direction
 /
 
 &Simulation
 beta          = 1       ! Inverse temperature
-n_bins        = 1        ! Number of bins 
+n_bins        = 10        ! Number of bins 
 mc_sweeps     = 1     ! Number of measurement cycles per bin
 /
 
@@ -13,7 +13,6 @@ mc_sweeps     = 1     ! Number of measurement cycles per bin
 alpha         = 1.0
 /
 
-! Only available for beta >= 75
 &Replica_Exchange
 n_exchange_steps      = 5   ! Number of total exchanges 
 n_exchange_frequency  = 100  ! The frequency in units of sweeps at which the exchange moves are carried out
