@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <complex.h>
 
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
@@ -16,18 +17,14 @@
  */
 typedef struct Flux
 {
-  double K[3];
+  double K;
 
   int *flux;
-  double *F;
-  double *H_matter;
+  double _Complex* H_majorana;
 
-  double *XT;
-  double *YT;
+  double _Complex* U;
   double *E;
 
-  double *A;
-  double *B;
   double *fermi_func;
 
   Lattice *latt;
@@ -36,7 +33,7 @@ typedef struct Flux
 /*
  * Initialises flux struct
  */
-void init_flux(double K[3], Lattice *latt, Flux *flux_conf);
+void init_flux(double K, Lattice *latt, Flux *flux_conf);
 
 /*
  * Sets flux

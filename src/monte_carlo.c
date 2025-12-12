@@ -13,8 +13,7 @@ void monte_carlo_step(int b, double beta, double r, Flux *flux_conf, Flux *new_f
 
   if (r <= ratio(beta, flux_conf, new_flux_conf)) {
     set_flux(flux, flux_conf);
-    memcpy(flux_conf->XT, new_flux_conf->XT, flux_conf->latt->N * flux_conf->latt->N * sizeof(double));
-    memcpy(flux_conf->YT, new_flux_conf->YT, flux_conf->latt->N * flux_conf->latt->N * sizeof(double));
+    memcpy(flux_conf->U, new_flux_conf->U, flux_conf->latt->Ns * flux_conf->latt->N * sizeof(double _Complex));
     memcpy(flux_conf->E, new_flux_conf->E, flux_conf->latt->N * sizeof(double));
   }
 }

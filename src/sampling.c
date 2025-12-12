@@ -8,7 +8,7 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
     switch (n)
     {
     case 0:
-      init_obs_scalar("SpinZZ", &(obs_scalar[n]));
+      init_obs_scalar("SpinT", &(obs_scalar[n]));
       break;
     case 1:
       init_obs_scalar("W", &(obs_scalar[n]));
@@ -21,12 +21,6 @@ void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n
       break;
     case 4:
       init_obs_scalar("dE_dbeta", &(obs_scalar[n]));
-      break;
-    case 5:
-      init_obs_scalar("SpinYY", &(obs_scalar[n]));
-      break;
-    case 6:
-      init_obs_scalar("SpinXX", &(obs_scalar[n]));
       break;
     default:
       printf("Observable not found. \n");
@@ -112,10 +106,7 @@ void reset_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int
 void sample(Obs_scalar *obs_scal, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, double beta, Flux *flux_conf)
 {
   int i; 
-  for (i = 0; i < flux_conf->latt->N * flux_conf->latt->N; i++) {
-    flux_conf->A[i] = flux_conf->XT[i] + flux_conf->YT[i];
-    flux_conf->B[i] = flux_conf->XT[i] - flux_conf->YT[i];
-  }
+
   for (i = 0; i < flux_conf->latt->N; i++) {
     flux_conf->fermi_func[i] = fermi_function(beta, flux_conf->E[i]);
   }
@@ -137,7 +128,7 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
 {
   int i, j, b, m, p, n;
   int Fij;
-  double res, tmp;
+  double _Complex res, tmp;
   double E, dEdb;
 
   for (i = 0; i < n_scal; i++) {
@@ -145,40 +136,17 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
   }
 
   res = 0.0;
-  for (p = 0; p < flux_conf->latt->N; p++) {
-    b = flux_conf->latt->z_bonds[p];
-    i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
-    j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
+  for (b = 0; b < flux_conf->latt->Nb; b++) {
+    i = flux_conf->latt->bond_list[b][0];
+    j = flux_conf->latt->bond_list[b][1];
     Fij = flux_conf->flux[b];
+
     for (m = 0; m < flux_conf->latt->N; m++) {
-      res += Fij * flux_conf->A[i * flux_conf->latt->N + m] * flux_conf->B[j * flux_conf->latt->N + m] * (1.0 - 2.0 * flux_conf->fermi_func[m]);
+      res += - I * Fij * (flux_conf->U[i * flux_conf->latt->N + m] * conj(flux_conf->U[j * flux_conf->latt->N + m]) * (1.0 - flux_conf->fermi_func[m]) 
+             + flux_conf->U[j * flux_conf->latt->N + m] * conj(flux_conf->U[i * flux_conf->latt->N + m]) * flux_conf->fermi_func[m]);
     }
   }
   obs[0].obs_vec += res / flux_conf->latt->N;
-
-  res = 0.0;
-  for (p = 0; p < flux_conf->latt->N; p++) {
-    b = flux_conf->latt->y_bonds[p];
-    i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
-    j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
-    Fij = flux_conf->flux[b];
-    for (m = 0; m < flux_conf->latt->N; m++) {
-      res += Fij * flux_conf->A[i * flux_conf->latt->N + m] * flux_conf->B[j * flux_conf->latt->N + m] * (1.0 - 2.0 * flux_conf->fermi_func[m]);
-    }
-  }
-  obs[5].obs_vec += res / flux_conf->latt->N;
-
-  res = 0.0;
-  for (p = 0; p < flux_conf->latt->N; p++) {
-    b = flux_conf->latt->x_bonds[p];
-    i = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][0]];
-    j = flux_conf->latt->r_sites[flux_conf->latt->bond_list[b][1]];
-    Fij = flux_conf->flux[b];
-    for (m = 0; m < flux_conf->latt->N; m++) {
-      res += Fij * flux_conf->A[i * flux_conf->latt->N + m] * flux_conf->B[j * flux_conf->latt->N + m] * (1.0 - 2.0 * flux_conf->fermi_func[m]);
-    }
-  }
-  obs[6].obs_vec += res / flux_conf->latt->N;
 
   res = 0.0;
   for (p = 0; p < flux_conf->latt->Np; p++) {
