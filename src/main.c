@@ -85,9 +85,15 @@ int main(int argc, char **argv)
   pcg32_srandom_r(&rng, SEED ^ (intptr_t)&rng, SEED);
 
   // Observables
-  obs_scal = (Obs_scalar*) malloc(n_scal * sizeof(Obs_scalar));
-  obs_eq = (Obs_latt*) malloc(n_eq * sizeof(Obs_latt));
-  obs_spec = (Obs_spectral*) malloc(n_spec * sizeof(Obs_spectral));
+  if (n_scal > 0) {
+    obs_scal = (Obs_scalar*) malloc(n_scal * sizeof(Obs_scalar));
+  }
+  if (n_eq > 0) {
+    obs_eq = (Obs_latt*) malloc(n_eq * sizeof(Obs_latt));
+  }
+  if (n_spec > 0) {
+    obs_spec = (Obs_spectral*) malloc(n_spec * sizeof(Obs_spectral));
+  }
   set_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec, &latt);
 
   // Replica Exchange
