@@ -1,4 +1,4 @@
-Y  2  2  1.0  1.0  1000  10 
+Y  182  1.0  1.0  1000  10 
 stop
-Run Lx_R Ly_R alpha_R  Beta_R  NSW_R NB_R )
-Name=( Run Lx_R Ly_R alpha_R  Beta_R  NSW_R NB_R )
+Run N_R alpha_R  Beta_R  NSW_R NB_R )
+Name=( Run N_R alpha_R  Beta_R  NSW_R NB_R )

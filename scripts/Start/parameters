@@ -1,5 +1,5 @@
 &Lattice
-N            = N_r   ! Size of the hyperbolic lattice
+N            = N_R   ! Size of the hyperbolic lattice
 /
 
 &Simulation

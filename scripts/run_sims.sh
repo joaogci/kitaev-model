@@ -1,17 +1,17 @@
 #!/bin/bash 
 
-Variable=(Run Lx_R Ly_R alpha_R  Beta_R  NSW_R NB_R)
-Name=( Run Lx_R Ly_R alpha_R  Beta_R  NSW_R NB_R )
-#      0    1    2     3       4       5      6  
+Variable=(Run N_R alpha_R  Beta_R  NSW_R NB_R)
+Name=( Run N_R alpha_R  Beta_R  NSW_R NB_R )
+#      0    1    2     3       4       5    
 {
 read -a Variable
 echo ${Variable[@]}
 echo ${Variable[0]}
 while [ ! ${Variable[0]} = "stop" ];   do
     if [ ${Variable[0]} = "Y" ]; then
-        export B_R_dir=`echo ${Variable[4]} | sed s/"\.0"//`
+        export B_R_dir=`echo ${Variable[3]} | sed s/"\.0"//`
         
-        export Dir="Lx"${Variable[1]}"_Ly"${Variable[2]}"_alpha"${Variable[3]}"_beta"${Variable[4]}        
+        export Dir="N"${Variable[1]}"_alpha"${Variable[2]}"_beta"${Variable[3]}        
         echo $Dir
         if [ ! -e $Dir ]; then
             mkdir $Dir
@@ -33,7 +33,7 @@ while [ ! ${Variable[0]} = "stop" ];   do
             let i=i+1 
         done
         
-        $KITAEV_DIR/src/main 
+        $KITAEV_DIR/src/main $KITAEV_DIR
 
         # sed s/Dir_R/$Dir/   job.sh  >  tmp
         # mv  tmp  job.sh
