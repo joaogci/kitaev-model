@@ -21,13 +21,13 @@ while [ ! ${Variable[0]} = "stop" ];   do
         else
             cd $Dir
             cp ../Start/parameters .
-            cp ../Start/job.sh .
+            # cp ../Start/job.sh .
             cd ..
         fi
         cd $Dir
         
         let i=1
-        while [  $i -lt 7 ]; do
+        while [  $i -lt 6 ]; do
             sed s/${Name[$i]}/${Variable[$i]}/    parameters  > tmp
             mv tmp parameters
             let i=i+1 
