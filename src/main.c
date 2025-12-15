@@ -106,8 +106,6 @@ int main(int argc, char **argv)
       init_replica(&(flux_replicas[i]), beta_init + i * (beta - beta_init) / (n_replica_walkers - 1), &(replicas[i]));
     }
   }
-  
-  omp_set_num_threads(n_replica_walkers);
 
   time_ = time(NULL);
   printf("Starting Finite T Kitaev simulation\n");
@@ -164,6 +162,8 @@ int main(int argc, char **argv)
       write_configuration(&flux_conf);
     }
   } else {
+    omp_set_num_threads(n_replica_walkers);
+
     // Replica Exchange Monte Carlo for low temperatures
     #pragma omp parallel default(shared) private(obs_scal, obs_eq, obs_spec, rng, new_flux_conf, n, t, i, b)
     {
