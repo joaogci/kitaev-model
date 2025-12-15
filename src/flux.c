@@ -7,10 +7,10 @@ void init_flux(double K, LatticeHyperbolic *latt, Flux *flux_conf)
 
   flux_conf->flux = (int *) malloc(flux_conf->latt->Nb * sizeof(int));
 
-  flux_conf->H_majorana = (double _Complex*) malloc(flux_conf->latt->Ns * flux_conf->latt->Ns * sizeof(double));
+  flux_conf->H_majorana = (double _Complex*) malloc(flux_conf->latt->Ns * flux_conf->latt->Ns * sizeof(double _Complex));
 
   flux_conf->E = (double *) malloc(flux_conf->latt->N * sizeof(double));
-  flux_conf->U = (double _Complex*) malloc(flux_conf->latt->Ns * flux_conf->latt->N * sizeof(double));
+  flux_conf->U = (double _Complex*) malloc(flux_conf->latt->Ns * flux_conf->latt->N * sizeof(double _Complex));
   flux_conf->fermi_func = (double *) malloc(flux_conf->latt->N * sizeof(double));
 }
 
