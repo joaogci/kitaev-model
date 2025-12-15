@@ -1,6 +1,6 @@
 #include "flux.h"
 
-void init_flux(double K, Lattice *latt, Flux *flux_conf)
+void init_flux(double K, LatticeHyperbolic *latt, Flux *flux_conf)
 {
   flux_conf->K = K;
   flux_conf->latt = latt;

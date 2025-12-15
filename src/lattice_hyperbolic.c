@@ -1,21 +1,13 @@
 #include "lattice_hyperbolic.h"
 
-void make_lattice_hyperbolic(int N, int*** adj_mat, Lattice_Hyperbolic* latt)
+void make_lattice_hyperbolic(int Ns, int Nb, int*** adj_mat, LatticeHyperbolic* latt)
 {
   int i, j, b;
 
-  latt->N = N;
-  latt->L = sqrt(latt->N);
+  latt->Ns = Ns;
+  latt->N = Ns/2;
+  latt->Nb = Nb;
   
-  latt->Nb = 0;
-  for (i = 0; i < latt->N; i++) {
-    for (j = 0; j <= i; j++) {
-      if ((*adj_mat)[i][j] != 0) {
-        latt->Nb++;
-      }
-    }
-  }
-
   /* bond list */
   latt->bond_list = (int**) malloc(latt->Nb * sizeof(int*));
   for (i = 0; i < latt->Nb; i++) {
@@ -23,7 +15,7 @@ void make_lattice_hyperbolic(int N, int*** adj_mat, Lattice_Hyperbolic* latt)
   }
 
   b = 0;
-  for (i = 0; i < latt->N; i++) {
+  for (i = 0; i < latt->Ns; i++) {
     for (j = 0; j <= i; j++) {
       if ((*adj_mat)[i][j] != 0) {
         latt->bond_list[b][0] = i;
@@ -33,24 +25,15 @@ void make_lattice_hyperbolic(int N, int*** adj_mat, Lattice_Hyperbolic* latt)
     }
   }
 
-  for (i = 0; i < latt->N; i++) {
+  for (i = 0; i < latt->Ns; i++) {
     free((*adj_mat)[i]);
   }
   free((*adj_mat));
 }
 
-void free_lattice_hyperbolic(Lattice_Hyperbolic* latt)
+void free_lattice_hyperbolic(LatticeHyperbolic* latt)
 {
   int i;
-
-  free(latt->bulk);
-  free(latt->sublattice);
-
-  for (i = 0; i < latt->N; i++) {
-    free(latt->r[i]);
-  }
-  free(latt->r);
-
   for (i = 0; i < latt->Nb; i++) {
     free(latt->bond_list[i]);
   }

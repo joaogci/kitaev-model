@@ -40,7 +40,7 @@ void analyse_scal(FILE* fp, Ana_scalar* obs, int n_bins, Ana_info *ana_info)
   free(measurements_rebin);
 }
 
-void analyse_latt(FILE* fp, Ana_latt* obs, Lattice *latt, int n_bins, Ana_info *ana_info)
+void analyse_latt(FILE* fp, Ana_latt* obs, LatticeHyperbolic *latt, int n_bins, Ana_info *ana_info)
 {
   int i, j, n;
   double real, imag, x, y;
@@ -98,7 +98,7 @@ void analyse_latt(FILE* fp, Ana_latt* obs, Lattice *latt, int n_bins, Ana_info *
   free(measurements_rebin);
 }
 
-void analyse_spectral(FILE* fp, Ana_spectral* obs, Lattice *latt, int n_om, double om_f, int n_bins, Ana_info *ana_info)
+void analyse_spectral(FILE* fp, Ana_spectral* obs, LatticeHyperbolic *latt, int n_om, double om_f, int n_bins, Ana_info *ana_info)
 {
   int i, j, n, b;
   double real, imag, x, y, om;
@@ -175,48 +175,48 @@ void write_scal(FILE* fp, Ana_scalar* obs)
   fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean), creal(obs->obs_std), cimag(obs->obs_mean), cimag(obs->obs_std));
 }
 
-void write_latt_r(FILE* fp, Ana_latt* obs, Lattice* latt)
+void write_latt_r(FILE* fp, Ana_latt* obs, LatticeHyperbolic* latt)
 {
-  int i;
+  // int i;
 
-  for (i = 0; i < latt->N; i++) {
-    fprintf(fp, "%lf %lf \n", (double) (latt->r[i][0] * latt->a_1[0] + latt->r[i][1] * latt->a_2[0]), (double) (latt->r[i][0] * latt->a_1[1] + latt->r[i][1] * latt->a_2[1]));
-    fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[i]), creal(obs->obs_std[i]), cimag(obs->obs_mean[i]), cimag(obs->obs_std[i]));
-  }
+  // for (i = 0; i < latt->N; i++) {
+  //   fprintf(fp, "%lf %lf \n", (double) (latt->r[i][0] * latt->a_1[0] + latt->r[i][1] * latt->a_2[0]), (double) (latt->r[i][0] * latt->a_1[1] + latt->r[i][1] * latt->a_2[1]));
+  //   fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[i]), creal(obs->obs_std[i]), cimag(obs->obs_mean[i]), cimag(obs->obs_std[i]));
+  // }
 }
 
-void write_latt_k(FILE* fp, Ana_latt* obs, Lattice* latt)
+void write_latt_k(FILE* fp, Ana_latt* obs, LatticeHyperbolic* latt)
 {
-  int i;
+  // int i;
 
-  for (i = 0; i < latt->N; i++) {
-    fprintf(fp, "%lf %lf \n", (double) (latt->k[i][0] * latt->b_1[0] + latt->k[i][1] * latt->b_2[0]), (double) (latt->k[i][0] * latt->b_1[1] + latt->k[i][1] * latt->b_2[1]));
-    fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[i]), creal(obs->obs_std[i]), cimag(obs->obs_mean[i]), cimag(obs->obs_std[i]));
-  }
+  // for (i = 0; i < latt->N; i++) {
+  //   fprintf(fp, "%lf %lf \n", (double) (latt->k[i][0] * latt->b_1[0] + latt->k[i][1] * latt->b_2[0]), (double) (latt->k[i][0] * latt->b_1[1] + latt->k[i][1] * latt->b_2[1]));
+  //   fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[i]), creal(obs->obs_std[i]), cimag(obs->obs_mean[i]), cimag(obs->obs_std[i]));
+  // }
 }
 
-void write_spectral_r(FILE* fp, Ana_spectral* obs, Lattice *latt, int n_om, double om_f)
+void write_spectral_r(FILE* fp, Ana_spectral* obs, LatticeHyperbolic *latt, int n_om, double om_f)
 {
-  int n, i;
+  // int n, i;
 
-  for (n = 0; n < n_om; n++) {
-    fprintf(fp, "%lf \n", n * om_f / (n_om - 1));
-    for (i = 0; i < latt->N; i++) {
-      fprintf(fp, "%lf %lf \n", (double) (latt->r[i][0] * latt->a_1[0] + latt->r[i][1] * latt->a_2[0]), (double) (latt->r[i][0] * latt->a_1[1] + latt->r[i][1] * latt->a_2[1]));
-      fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[n][i]), creal(obs->obs_std[n][i]), cimag(obs->obs_mean[n][i]), cimag(obs->obs_std[n][i]));
-    }
-  }
+  // for (n = 0; n < n_om; n++) {
+  //   fprintf(fp, "%lf \n", n * om_f / (n_om - 1));
+  //   for (i = 0; i < latt->N; i++) {
+  //     fprintf(fp, "%lf %lf \n", (double) (latt->r[i][0] * latt->a_1[0] + latt->r[i][1] * latt->a_2[0]), (double) (latt->r[i][0] * latt->a_1[1] + latt->r[i][1] * latt->a_2[1]));
+  //     fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[n][i]), creal(obs->obs_std[n][i]), cimag(obs->obs_mean[n][i]), cimag(obs->obs_std[n][i]));
+  //   }
+  // }
 }
 
-void write_spectral_k(FILE* fp, Ana_spectral* obs, Lattice *latt, int n_om, double om_f)
+void write_spectral_k(FILE* fp, Ana_spectral* obs, LatticeHyperbolic *latt, int n_om, double om_f)
 {
-  int i, n;
+  // int i, n;
 
-  for (n = 0; n < n_om; n++) {
-    fprintf(fp, "%lf \n", n * om_f / (n_om - 1));
-    for (i = 0; i < latt->N; i++) {
-      fprintf(fp, "%lf %lf \n", (double) (latt->k[i][0] * latt->b_1[0] + latt->k[i][1] * latt->b_2[0]), (double) (latt->k[i][0] * latt->b_1[1] + latt->k[i][1] * latt->b_2[1]));
-      fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[n][i]), creal(obs->obs_std[n][i]), cimag(obs->obs_mean[n][i]), cimag(obs->obs_std[n][i]));
-    }
-  }
+  // for (n = 0; n < n_om; n++) {
+  //   fprintf(fp, "%lf \n", n * om_f / (n_om - 1));
+  //   for (i = 0; i < latt->N; i++) {
+  //     fprintf(fp, "%lf %lf \n", (double) (latt->k[i][0] * latt->b_1[0] + latt->k[i][1] * latt->b_2[0]), (double) (latt->k[i][0] * latt->b_1[1] + latt->k[i][1] * latt->b_2[1]));
+  //     fprintf(fp, "%lf %lf %lf %lf \n", creal(obs->obs_mean[n][i]), creal(obs->obs_std[n][i]), cimag(obs->obs_mean[n][i]), cimag(obs->obs_std[n][i]));
+  //   }
+  // }
 }

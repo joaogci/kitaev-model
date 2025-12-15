@@ -11,7 +11,7 @@
 #include "rng/pcg_basic.h"
 #include "sampling.h"
 #include "observables.h"
-#include "lattice.h"
+#include "lattice_hyperbolic.h"
 #include "io/io.h"
 
 #ifndef TESTING
@@ -21,8 +21,9 @@
 #endif
 
 // Lattice
-int Lx, Ly;
-Lattice latt;
+int N, Nb;
+int** adj_mat;
+LatticeHyperbolic latt;
 
 // Simulation
 Sim_info sim;
@@ -63,16 +64,17 @@ int main(int argc, char **argv)
   Flux new_flux_conf;
 
   // Read and process inputs
-  if (argc < 1) {
-    // printf("Please provide the number of threads and the path to the main directory. \n");
-    // printf("Usage: %s MC_DIR \n", argv[0]);
+  if (argc < 2) {
+    printf("Please provide the path to the main directory. \n");
+    printf("Usage: %s KITAEV_DIR \n", argv[0]);
     exit(1);
   }
 
-  read_parameters(&Lx, &Ly, &beta, &(sim.n_bins), &(sim.mc_sweeps), &(K));
+  read_parameters(&N, &beta, &(sim.n_bins), &(sim.mc_sweeps), &(K));
 
   // Lattice
-  make_lattice(Lx, Ly, &latt);
+  read_hyperbolic_lattice(N, &Nb, &adj_mat, argv[1]);
+  make_lattice_hyperbolic(N, Nb, &adj_mat, &latt);
 
   // Hamiltonian
   init_flux(K, &latt, &flux_conf);
@@ -238,7 +240,7 @@ int main(int argc, char **argv)
   fflush(stdout);
 
   // FREE THE VARIABLES
-  free_lattice(&latt);
+  free_lattice_hyperbolic(&latt);
   free_flux(&flux_conf);
   free_observables(obs_scal, n_scal, obs_eq, n_eq, obs_spec, n_spec);
   free(obs_eq);

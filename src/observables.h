@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdint.h>
 
-#include "lattice.h"
+#include "lattice_hyperbolic.h"
 
 #define BUFFER 32
 
@@ -38,7 +38,7 @@ typedef struct Obs_latt
   double _Complex* obs_k;
   double _Complex* obs_i;
 
-  Lattice* latt;
+  LatticeHyperbolic* latt;
 } Obs_latt;
 
 /* 
@@ -55,13 +55,13 @@ typedef struct Obs_spectral
 
   double _Complex*** obs_latt;
   double _Complex **obs_k, **obs_i;
-  Lattice *latt;
+  LatticeHyperbolic *latt;
 } Obs_spectral;
 
 
 void init_obs_scalar(char* filename, Obs_scalar* obs);
-void init_obs_latt(char* filename, Lattice* latt, Obs_latt* obs);
-void init_obs_spectral(char* filename, int n_om, double om_f, Lattice *latt, Obs_spectral* obs);
+void init_obs_latt(char* filename, LatticeHyperbolic* latt, Obs_latt* obs);
+void init_obs_spectral(char* filename, int n_om, double om_f, LatticeHyperbolic *latt, Obs_spectral* obs);
 
 void reset_obs_scalar(Obs_scalar* obs);
 void reset_obs_latt(Obs_latt* obs);

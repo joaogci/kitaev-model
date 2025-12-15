@@ -4,13 +4,14 @@
 #include <string.h>
 
 #include "observables.h"
-#include "lattice.h"
+#include "lattice_hyperbolic.h"
 #include "io/io.h"
 #include "analysis.h"
 
 // Lattice
-int Lx, Ly;
-Lattice latt;
+int N, Nb;
+int** adj_mat;
+LatticeHyperbolic latt;
 
 // Spectral
 int n_om;
@@ -93,10 +94,10 @@ int main(int argc, char** argv)
           break;
         case 'e':
           getline(&line, &len, info);
-          fscanf(info, "Lx: %d\n", &Lx);
-          fscanf(info, "Ly: %d\n", &Ly);
+          // fscanf(info, "Lx: %d\n", &Lx);
+          // fscanf(info, "Ly: %d\n", &Ly);
 
-          make_lattice(Lx, Ly, &latt);
+          // make_lattice(Lx, Ly, &latt);
           
           obs_eq.obs_mean = (double _Complex*) malloc(latt.N * sizeof(double _Complex));
           obs_eq.obs_std = (double _Complex*) malloc(latt.N * sizeof(double _Complex));
@@ -156,16 +157,16 @@ int main(int argc, char** argv)
           free(obs_eq.obs_mean);
           free(obs_eq.obs_std);
 
-          free_lattice(&latt);
+          // free_lattice(&latt);
           break;
         case 's':
           getline(&line, &len, info);
-          fscanf(info, "Lx: %d\n", &Lx);
-          fscanf(info, "Ly: %d\n", &Ly);
+          // fscanf(info, "Lx: %d\n", &Lx);
+          // fscanf(info, "Ly: %d\n", &Ly);
           fscanf(info, "n_om: %d\n", &n_om);
           fscanf(info, "om_f: %lf\n", &om_f);
 
-          make_lattice(Lx, Ly, &latt);
+          // make_lattice(Lx, Ly, &latt);
 
           obs_spec.obs_mean = (double _Complex**) malloc(n_om * sizeof(double _Complex*));
           obs_spec.obs_std = (double _Complex**) malloc(n_om * sizeof(double _Complex*));
@@ -234,7 +235,7 @@ int main(int argc, char** argv)
           }
           free(obs_spec.obs_mean);
           free(obs_spec.obs_std);
-          free_lattice(&latt);
+          // free_lattice(&latt);
           break;
       }
       

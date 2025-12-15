@@ -10,7 +10,7 @@
 #include <gsl/gsl_math.h>
 #include <gsl/gsl_eigen.h>
 
-#include "lattice.h"
+#include "lattice_hyperbolic.h"
 
 /*
  * Flux struct
@@ -27,13 +27,13 @@ typedef struct Flux
 
   double *fermi_func;
 
-  Lattice *latt;
+  LatticeHyperbolic *latt;
 } Flux;
 
 /*
  * Initialises flux struct
  */
-void init_flux(double K, Lattice *latt, Flux *flux_conf);
+void init_flux(double K, LatticeHyperbolic *latt, Flux *flux_conf);
 
 /*
  * Sets flux

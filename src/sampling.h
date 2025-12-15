@@ -9,12 +9,12 @@
 
 #include "flux.h"
 #include "observables.h"
-#include "lattice.h"
+#include "lattice_hyperbolic.h"
 
 /*
  * Sets the obervables to sample
  */
-void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, Lattice *latt);
+void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, LatticeHyperbolic *latt);
 
 /*
  * Reset observables

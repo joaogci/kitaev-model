@@ -1,6 +1,6 @@
 #include "sampling.h"
 
-void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, Lattice *latt)
+void set_observables(Obs_scalar *obs_scalar, int n_scal, Obs_latt *obs_eq, int n_eq, Obs_spectral *obs_spec, int n_spec, LatticeHyperbolic *latt)
 {
   int n;
 
@@ -146,17 +146,17 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
              + flux_conf->U[j * flux_conf->latt->N + m] * conj(flux_conf->U[i * flux_conf->latt->N + m]) * flux_conf->fermi_func[m]);
     }
   }
-  obs[0].obs_vec += res / flux_conf->latt->N;
+  obs[0].obs_vec += res / flux_conf->latt->Ns;
 
   res = 0.0;
-  for (p = 0; p < flux_conf->latt->Np; p++) {
-    tmp = 1.0;
-    for (b = 0; b < flux_conf->latt->size_p; b++) {
-      tmp *= flux_conf->flux[flux_conf->latt->plaquette_bonds[p][b]];
-    }
-    res += tmp;
-  }
-  obs[1].obs_vec += res / flux_conf->latt->N;
+  // for (p = 0; p < flux_conf->latt->Np; p++) {
+  //   tmp = 1.0;
+  //   for (b = 0; b < flux_conf->latt->size_p; b++) {
+  //     tmp *= flux_conf->flux[flux_conf->latt->plaquette_bonds[p][b]];
+  //   }
+  //   res += tmp;
+  // }
+  obs[1].obs_vec += res / flux_conf->latt->Ns;
 
   E = 0.0;
   dEdb = 0.0;

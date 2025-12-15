@@ -169,3 +169,32 @@ int num_lines(FILE* fp)
 
   return lines;
 }
+
+void read_hyperbolic_lattice(int N, int *Nb, int*** adj_mat, char* sse_path)
+{
+  int i, j;
+  char filename[BUFFER_SIZE];
+  FILE* file;
+
+  sprintf(filename, "%s/src/lattices/C%d", sse_path, N);
+  file = fopen(filename, "r");
+
+  if (file != NULL) {
+    fscanf(file, "%d %d\n", &N, Nb);
+    (*adj_mat) = (int**) malloc((N) * sizeof(int*));
+    
+    for (i = 0; i < N; i++) {
+      (*adj_mat)[i] = (int*) malloc(N * sizeof(int));
+
+      for (j = 0; j < N; j++) {
+        fscanf(file, "%d.", &((*adj_mat)[i][j]));
+      }
+    }
+  } else {
+    printf("Error opening the adjacency matrix file. \n");
+    exit(1);
+  }
+
+  fclose(file); 
+}
+

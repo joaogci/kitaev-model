@@ -1,12 +1,11 @@
 &Lattice
-Lx            = 4   ! Number of unit lattices on the x direction
-Ly            = 4   ! Number of unit lattices on the x direction
+N            = 182   
 /
 
 &Simulation
-beta          = 10       ! Inverse temperature
+beta          = 1       ! Inverse temperature
 n_bins        = 10        ! Number of bins 
-mc_sweeps     = 100     ! Number of measurement cycles per bin
+mc_sweeps     = 1     ! Number of measurement cycles per bin
 /
 
 &Hamiltonian

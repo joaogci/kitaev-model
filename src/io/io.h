@@ -24,7 +24,7 @@ typedef struct Ana_info {
 /*
  *  reads input file for the simulation - Fortran function 
  */
-void read_parameters(int* Lx, int* Ly, double* beta, int* n_bins, long* mc_sweeps, double* alpha);
+void read_parameters(int *N, double* beta, int* n_bins, long* mc_sweeps, double* alpha);
 
 /* 
  * reads parameters for analysis
@@ -35,6 +35,11 @@ void read_parameters_analysis(int *n_skip, int* n_rebin);
  * reads parameters for replica exchange
  */
 void read_parameters_replica(int *n_exchange_steps, int* n_exchange_frequency, int *n_replica_walkers);
+
+/*
+ * Reads hyperbolic lattice
+ */
+void read_hyperbolic_lattice(int N, int *Nb, int*** adj, char* sse_path);
 
 /*
  * writes observables

@@ -9,23 +9,23 @@
 /*
  * Hyperbolic lattice struct
  */
-typedef struct Lattice_Hyperbolic
+typedef struct LatticeHyperbolic
 {
-  double L;
-  int N;
+  int Ns;
   int Nb;
+  int N;
 
   int** bond_list;  
-} Lattice_Hyperbolic;
+} LatticeHyperbolic;
 
 /*
  * makes hyperbolic lattice
  */
-void make_lattice_hyperbolic(int N, int*** adj_mat, Lattice_Hyperbolic* latt);
+void make_lattice_hyperbolic(int N, int Nb, int*** adj_mat, LatticeHyperbolic* latt);
 
 /*
  * frees hyperbolic lattice
  */
-void free_lattice_hyperbolic(Lattice_Hyperbolic* latt);
+void free_lattice_hyperbolic(LatticeHyperbolic* latt);
 
 #endif // LATTICE_HYPERBOLIC_H

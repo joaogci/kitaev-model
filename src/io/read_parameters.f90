@@ -1,12 +1,11 @@
-subroutine read_parameters(Lx,Ly,beta, &
+subroutine read_parameters(N,beta, &
   n_bins,mc_sweeps,alpha) &
   bind(c,name='read_parameters')
 
   use,intrinsic :: iso_c_binding,only:c_char,c_int,c_double,c_long
   implicit none
 
-  integer(kind=c_int),    intent(inout) :: Lx
-  integer(kind=c_int),    intent(inout) :: Ly
+  integer(kind=c_int),    intent(inout) :: N
 
   real(kind=c_double),    intent(inout) :: beta
   integer(kind=c_int),    intent(inout) :: n_bins
@@ -14,7 +13,7 @@ subroutine read_parameters(Lx,Ly,beta, &
 
   real(kind=c_double),    intent(inout) :: alpha
 
-  namelist /Lattice/ Lx,Ly
+  namelist /Lattice/ N
   namelist /Simulation/ beta,n_bins,mc_sweeps
   namelist /Hamiltonian/ alpha
 

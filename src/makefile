@@ -1,11 +1,11 @@
 INCLUDES_MC = flux.h observables.h sampling.h \
-	lattice.h io/io.h rng/pcg_basic.h monte_carlo.h \
+	lattice_hyperbolic.h io/io.h rng/pcg_basic.h monte_carlo.h \
 	replica.h
 SOURCES_MC = main.c flux.c observables.c sampling.c \
-  lattice.c io/io.c rng/pcg_basic.c monte_carlo.c \
+  lattice_hyperbolic.c io/io.c rng/pcg_basic.c monte_carlo.c \
 	replica.c
-INCLUDES_ANA = lattice.h io/io.h analysis.h observables.h
-SOURCES_ANA = ana.c lattice.c io/io.c analysis.c observables.c
+INCLUDES_ANA = lattice_hyperbolic.h io/io.h analysis.h observables.h
+SOURCES_ANA = ana.c lattice_hyperbolic.c io/io.c analysis.c observables.c
 
 FLAGS = -O2 -fopenmp
 DEBUG_FLAGS = -Wall -Wshadow

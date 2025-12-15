@@ -1,6 +1,5 @@
 &Lattice
-Lx            = Lx_R   ! Number of unit lattices on the x direction
-Ly            = Ly_R   ! Number of unit lattices on the x direction
+N            = N_r   ! Size of the hyperbolic lattice
 /
 
 &Simulation
