@@ -21,8 +21,9 @@
 #endif
 
 // Lattice
-int N, Nb;
+int N, Nb, Np, Nvp;
 int** adj_mat;
+int** plaquette_list;
 LatticeHyperbolic latt;
 
 // Simulation
@@ -73,8 +74,8 @@ int main(int argc, char **argv)
   read_parameters(&N, &beta, &(sim.n_bins), &(sim.mc_sweeps), &(K));
 
   // Lattice
-  read_hyperbolic_lattice(N, &Nb, &adj_mat, argv[1]);
-  make_lattice_hyperbolic(N, Nb, &adj_mat, &latt);
+  read_hyperbolic_lattice(N, &Nb, &Np, &Nvp, &adj_mat, &plaquette_list, argv[1]);
+  make_lattice_hyperbolic(N, Nb, Np, Nvp, &adj_mat, &plaquette_list, &latt);
 
   // Hamiltonian
   init_flux(K, &latt, &flux_conf);

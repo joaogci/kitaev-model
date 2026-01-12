@@ -149,14 +149,14 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
   obs[0].obs_vec += res / flux_conf->latt->Ns;
 
   res = 0.0;
-  // for (p = 0; p < flux_conf->latt->Np; p++) {
-  //   tmp = 1.0;
-  //   for (b = 0; b < flux_conf->latt->size_p; b++) {
-  //     tmp *= flux_conf->flux[flux_conf->latt->plaquette_bonds[p][b]];
-  //   }
-  //   res += tmp;
-  // }
-  obs[1].obs_vec += res / flux_conf->latt->Ns;
+  for (p = 0; p < flux_conf->latt->Np; p++) {
+    tmp = 1.0;
+    for (b = 0; b < flux_conf->latt->Nvp; b++) {
+      tmp *= flux_conf->flux[flux_conf->latt->plaqutte_list[p][b]];
+    }
+    res += tmp;
+  }
+  obs[1].obs_vec += cpow(- I, flux_conf->latt->Nvp) * res / flux_conf->latt->Ns;
 
   E = 0.0;
   dEdb = 0.0;

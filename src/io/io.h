@@ -39,7 +39,7 @@ void read_parameters_replica(int *n_exchange_steps, int* n_exchange_frequency, i
 /*
  * Reads hyperbolic lattice
  */
-void read_hyperbolic_lattice(int N, int *Nb, int*** adj, char* sse_path);
+void read_hyperbolic_lattice(int N, int *Nb, int *Np, int *Nvp, int*** adj, int ***plaquette_list, char* sse_path);
 
 /*
  * writes observables

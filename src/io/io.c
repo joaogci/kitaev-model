@@ -170,7 +170,7 @@ int num_lines(FILE* fp)
   return lines;
 }
 
-void read_hyperbolic_lattice(int N, int *Nb, int*** adj_mat, char* sse_path)
+void read_hyperbolic_lattice(int N, int *Nb, int *Np, int *Nvp, int*** adj_mat, int ***plaquette_list, char* sse_path)
 {
   int i, j;
   char filename[BUFFER_SIZE];
@@ -180,7 +180,7 @@ void read_hyperbolic_lattice(int N, int *Nb, int*** adj_mat, char* sse_path)
   file = fopen(filename, "r");
 
   if (file != NULL) {
-    fscanf(file, "%d %d\n", &N, Nb);
+    fscanf(file, "%d %d %d %d\n", &N, Nb, Np, Nvp);
     (*adj_mat) = (int**) malloc((N) * sizeof(int*));
     
     for (i = 0; i < N; i++) {
@@ -188,6 +188,14 @@ void read_hyperbolic_lattice(int N, int *Nb, int*** adj_mat, char* sse_path)
 
       for (j = 0; j < N; j++) {
         fscanf(file, "%d.", &((*adj_mat)[i][j]));
+      }
+    }
+
+    (*plaquette_list) = (int **) malloc(*Np * sizeof(int *));
+    for (i = 0; i < *Np; i++) {
+      (*plaquette_list)[i] = (int *) malloc(*Nvp * sizeof(int));
+      for (j = 0; j < *Nvp; j++) {
+        fscanf(file, "%d.", &((*plaquette_list)[i][j]));
       }
     }
   } else {
