@@ -32,9 +32,13 @@ void analyse_scal(FILE* fp, Ana_scalar* obs, int n_bins, Ana_info *ana_info)
   obs->obs_mean = obs->obs_mean / (n_bins/ana_info->n_rebin);
 
   for (i = 0; i < n_bins/ana_info->n_rebin; i++) {
-    obs->obs_std += cpow(measurements_rebin[i] - obs->obs_mean, 2.0);
+    real = pow(creal(measurements_rebin[i]) - creal(obs->obs_mean), 2.0);
+    imag = pow(cimag(measurements_rebin[i]) - cimag(obs->obs_mean), 2.0);
+    obs->obs_std += real + I * imag;
   }
-  obs->obs_std = csqrt(obs->obs_std / (n_bins/ana_info->n_rebin));
+  real = sqrt(creal(obs->obs_std) / (n_bins/ana_info->n_rebin));
+  imag = sqrt(cimag(obs->obs_std) / (n_bins/ana_info->n_rebin));
+  obs->obs_std = real + I * imag;
 
   free(measurements);
   free(measurements_rebin);
