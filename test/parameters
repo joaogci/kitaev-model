@@ -1,11 +1,12 @@
 &Lattice
-N            = 364 ! 182 364 448   
+N            = 364 ! 182 364 448  {7,3}
+                   ! 336 512 {8,3}
 /
 
 &Simulation
-beta          = 1       ! Inverse temperature
-n_bins        = 10        ! Number of bins 
-mc_sweeps     = 1     ! Number of measurement cycles per bin
+beta          = 100       ! Inverse temperature
+n_bins        = 4        ! Number of bins 
+mc_sweeps     = 10     ! Number of measurement cycles per bin
 /
 
 &Hamiltonian
@@ -13,12 +14,12 @@ alpha         = 1.0
 /
 
 &Replica_Exchange
-n_exchange_steps      = 5   ! Number of total exchanges 
-n_exchange_frequency  = 100  ! The frequency in units of sweeps at which the exchange moves are carried out
-n_replica_walkers     = 5  ! Number of replica configurations
+n_exchange_steps      = 4   ! Number of total exchanges 
+n_exchange_frequency  = 5  ! The frequency in units of sweeps at which the exchange moves are carried out
+n_replica_walkers     = 4  ! Number of replica configurations
 /
 
 &Analysis
-n_skip        = 5   ! Skip first n_skip bins
+n_skip        = 2   ! Skip first n_skip bins
 n_rebin       = 1    ! Takes the average of n_rebin bins
 /

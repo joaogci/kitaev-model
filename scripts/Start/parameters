@@ -1,5 +1,6 @@
 &Lattice
-N            = N_R   ! Size of the hyperbolic lattice
+N            = N_R   ! 182 364 448 {7,3}
+                     ! 336 512 {8,3}
 /
 
 &Simulation
