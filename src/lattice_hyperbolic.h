@@ -18,13 +18,16 @@ typedef struct LatticeHyperbolic
   int Nvp;
 
   int** bond_list;  
-  int** plaqutte_list;  
+  int** inv_bond_list;
+  int** plaquette_list;  
+  int** plaquette_bond_list;  
+  int** bond_sign_plaquette;
 } LatticeHyperbolic;
 
 /*
  * makes hyperbolic lattice
  */
-void make_lattice_hyperbolic(int N, int Nb, int Np, int Nvp, int*** adj_mat, int*** plaqutte_list, LatticeHyperbolic* latt);
+void make_lattice_hyperbolic(int N, int Nb, int Np, int Nvp, int*** adj_mat, int*** plaquette_list, LatticeHyperbolic* latt);
 
 /*
  * frees hyperbolic lattice
