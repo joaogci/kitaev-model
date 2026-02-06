@@ -21,7 +21,7 @@ module load gsl
 module list
 
 cd src
-make 
+make fritz
 cd ..
 
 echo "[3] -  Successful compilation"

@@ -16,7 +16,7 @@ export KITAEV_DIR=$(pwd)
 
 echo "[2] - Compiling SSE code"
 cd src
-make 
+make all
 cd ..
 echo "[3] -  Successful compilation"
 
