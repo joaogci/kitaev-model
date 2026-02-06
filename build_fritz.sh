@@ -15,9 +15,15 @@ echo "[1] - Exporting directories"
 export KITAEV_DIR=$(pwd)
 
 echo "[2] - Compiling SSE code"
+module purge
+module load gcc/14.2.0
+module load gsl
+module list
+
 cd src
-make all
+make fritz
 cd ..
+
 echo "[3] -  Successful compilation"
 
 
