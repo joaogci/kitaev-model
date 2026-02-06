@@ -25,6 +25,9 @@ else
   endif
 endif
 
+fritz: read_parameters $(SOURCES_MC) $(INCLUDES_MC)
+	$(CC) -o main $(FLAGS) $(DEBUG_FLAGS) -I/apps/SPACK/0.17.1/opt/linux-almalinux8-icelake/gcc-11.2.0/gsl-2.7-kpbiypjr42ht7kwi7obccf2nafaedgwg/include io/read_parameters.o io/read_parameters_analysis.o io/read_parameters_replica.o $(SOURCES_MC) -L/apps/SPACK/0.17.1/opt/linux-almalinux8-icelake/gcc-11.2.0/gsl-2.7-kpbiypjr42ht7kwi7obccf2nafaedgwg/lib -lgsl -lgslcblas -lm -lgfortran
+
 all: main ana
 
 main: read_parameters $(SOURCES_MC) $(INCLUDES_MC)
