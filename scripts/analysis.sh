@@ -14,7 +14,8 @@ while [ ! ${Variable[0]} = "stop" ];   do
         export Dir="N"${Variable[1]}"_alpha"${Variable[2]}"_beta"${Variable[3]}
         echo $Dir
         cd $Dir
-        
+
+        cp ../Start/parameters .
         $KITAEV_DIR/src/ana *
 
         cd ..
