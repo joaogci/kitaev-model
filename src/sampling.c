@@ -156,7 +156,7 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     }
     res += tmp;
   }
-  obs[1].obs_vec += 2.0 * cpow(- I, flux_conf->latt->Nvp) * res / flux_conf->latt->Ns;
+  obs[1].obs_vec += cpow(- I, flux_conf->latt->Nvp) * res / flux_conf->latt->Np;
 
   E = 0.0;
   dEdb = 0.0;
@@ -166,9 +166,9 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     E += flux_conf->E[n] * 0.5 * tanh(beta * flux_conf->E[n] * 0.5);
     dEdb += - flux_conf->E[n] * flux_conf->E[n] * 0.25 / (cosh(beta * flux_conf->E[n] * 0.5) * cosh(beta * flux_conf->E[n] * 0.5));
   }
-  obs[2].obs_vec += E / flux_conf->latt->N;
-  obs[3].obs_vec += E * E / flux_conf->latt->N;
-  obs[4].obs_vec += dEdb / flux_conf->latt->N;
+  obs[2].obs_vec += E;
+  obs[3].obs_vec += E * E;
+  obs[4].obs_vec += dEdb;
 }
 
 void sample_obs_eq(Obs_latt *obs, int n_eq, double beta, Flux *flux_conf)
