@@ -156,7 +156,7 @@ void sample_obs_scalar(Obs_scalar *obs, int n_scal, double beta, Flux *flux_conf
     }
     res += tmp;
   }
-  if (flux_conf->latt->Ns == 364) {
+  if (flux_conf->latt->Ns == 364 || flux_conf->latt->Ns == 168) {
     obs[1].obs_vec += cpow(- I, flux_conf->latt->Nvp) * (fabs(creal(res)) + I * fabs(cimag(res))) / flux_conf->latt->Np;
   } else {
     obs[1].obs_vec += cpow(- I, flux_conf->latt->Nvp) * res / flux_conf->latt->Np;
